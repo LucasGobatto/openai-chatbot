@@ -1,6 +1,6 @@
 import * as React from 'react';
+import "./input.css";
 
-// TODO - Add some styles to this component
 export function Input({ onSubmit }) {
   const [question, setQuestion] = React.useState('');
 

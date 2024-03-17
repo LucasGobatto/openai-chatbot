@@ -1,4 +1,5 @@
-// TODO - Add some styles to this component
+import "./chat.css";
+
 export function Chat({ historic }) {
   return (
     <>
