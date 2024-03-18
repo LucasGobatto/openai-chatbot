@@ -9,8 +9,8 @@ Monorepo que abriga o frontend e o backend da aplicação [Nome do Projeto], a q
 ### Integrantes
 
 1. [Lucas Gobatto Bisaio](https://github.com/LucasGobatto) (RA 24.85938-1)
-2. [A definir](https://link-do-github.todo)
-3. [A definir](https://link-do-github.todo)
+2. [Lucas Veríssimo](https://github.com/ActiveAntelope) (RA 24.85868-0)
+3. [Samuel Veiga](https://github.com/Samuka32) (RA 23.85452-4)
 
 ### Como executar
 
