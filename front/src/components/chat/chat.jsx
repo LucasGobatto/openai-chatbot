@@ -1,17 +1,25 @@
+import React from 'react';
 import "./styles.css";
 
 export function Chat({ historic }) {
+ const containerRef = React.useRef(null);
+
+ React.useEffect(() => {
+  containerRef.current.scrollTop = containerRef.current.scrollHeight;
+ }, [historic])
+
   return (
-    <div className="historic-container">
+    <div ref={containerRef} className="historic-container">
+    <button className='back'>{"< voltar"}</button>
       {(historic ?? []).map(({ question, response }, index) => (
         <div className="message-container" key={index}>
-          <div className="text-container">
-            <p className="user-question">{question}</p>
+          <div className="text-container align-right">
+            <pre className="base-chat user-question">{question}</pre>
             <div className="profile">U</div>
           </div>
-          <div className="text-container">
+          <div className="text-container align-left">
             <div className="profile">AI</div>
-            <p className="ai-response">{response}</p>
+            <pre className="base-chat ai-response">{response}</pre>
           </div>
         </div>
       ))}

@@ -9,10 +9,22 @@ export function Input({ onSubmit }) {
     onSubmit(question);
   }
 
+  
+  function handleInput(event) {
+    event.target.style.height = "50px"; // reset the height
+    event.target.style.height = `${event.target.scrollHeight}px`; // set it to scrollHeight
+  }
+
   return (
     <form className="user-form" onSubmit={handleSubmit}>
-      <input className="question-input" type="text" placeholder="Digite sua duvida aqui..." onChange={(event) => setQuestion(event.target.value)}/>
-      <input className="submit-button" name="question" type="submit" />
+      <textarea 
+        className="question-input"
+        name="question"
+        placeholder="Digite sua duvida aqui..."
+        onChange={(event) => setQuestion(event.target.value)}
+        onInput={handleInput}
+      />
+      <button className="submit-button" type="submit">{'>'}</button>
     </form>
   );
 }
