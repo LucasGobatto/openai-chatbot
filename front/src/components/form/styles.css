@@ -1,0 +1,9 @@
+.home-form {
+  justify-self: center;
+  background-color: #272F3E;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 48px;
+  width: 100%;
+}

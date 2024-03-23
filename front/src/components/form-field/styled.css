@@ -1,0 +1,25 @@
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #D0D7E4;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #D0D7E4;
+}
+
+.form-input::placeholder {
+  font-size: 16px;
+  color: #9da3ad;
+}

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import "./styles.css";
 
 export function Input({ onSubmit }) {
@@ -28,3 +29,7 @@ export function Input({ onSubmit }) {
     </form>
   );
 }
+
+Input.propTypes = {
+   onSubmit: PropTypes.func.isRequired,
+};
