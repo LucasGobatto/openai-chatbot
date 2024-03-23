@@ -4,7 +4,7 @@ import "./styles.css";
 export function HomePage() {
   return (
     <div className='home-content'>
-      <h1>Job Interview Assistance</h1>
+      <h1 className='hero'>Job Interview Assistance</h1>
       <Form />
     </div>
   );

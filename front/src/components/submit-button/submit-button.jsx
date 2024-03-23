@@ -1,7 +1,9 @@
-import "./styles.css"
+import './styles.css';
 
-export function SubmitButton() { 
+export function SubmitButton() {
   return (
-    <button className="submit-button" type="submit">Iniciar</button>
-  )
+    <button className='submit-button' type='submit'>
+      Iniciar
+    </button>
+  );
 }
