@@ -10,16 +10,17 @@
 }
 
 .form-input {
+  min-height: 56px;
   width: 100%;
   padding: 8px;
   font-size: 16px;
-  border: 1px solid #D0D7E4;
+  border: 1px solid #d0d7e4;
   border-radius: 5px;
   background-color: transparent;
-  color: #D0D7E4;
+  color: #d0d7e4;
 }
 
-.form-input::placeholder {
-  font-size: 16px;
-  color: #9da3ad;
+.multiline {
+  height: 120px;
+  resize: none;
 }

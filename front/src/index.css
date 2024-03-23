@@ -5,13 +5,24 @@
 }
 
 #root {
-  background-color: #181F2C;
+  background-color: #181f2c;
   height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-p, input,h1,h2,h3,h4,h5,h6, label, span, button{
-  font-family: "Inter", sans-serif;
-  color: #D0D7E4;
+p,
+input,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+span,
+button,
+::placeholder {
+  font-family: 'Inter', sans-serif;
+  color: #d0d7e4;
 }
