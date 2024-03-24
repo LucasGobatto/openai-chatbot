@@ -6,9 +6,9 @@ export function FormField(props) {
     <div className='form-content'>
       <label className='form-label'>{`${props.label}${props.required ? '*' : ''}`}</label>
       {props.multiline ? (
-        <textarea className='form-input multiline' placeholder={props.placeholder} min={6} required={props.required} />
+        <textarea className='form-input multiline' placeholder={props.placeholder} min={6} required={props.required} name={props.name} />
       ) : (
-        <input className='form-input' placeholder={props.placeholder} min={6} required={props.required} />
+        <input className='form-input' placeholder={props.placeholder} min={6} required={props.required} name={props.name} />
       )}
     </div>
   );
@@ -19,4 +19,5 @@ FormField.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   multiline: PropTypes.bool,
+  name: PropTypes.string.isRequired
 };
