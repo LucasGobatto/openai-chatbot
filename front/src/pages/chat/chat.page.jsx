@@ -12,7 +12,7 @@ const historicMock = [
   },
 ];
 
-export function App() {
+export function ChatPage() {
   const [historic, setHistoric] = React.useState(historicMock);
 
   function handleMessage(question) {
