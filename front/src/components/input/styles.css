@@ -3,7 +3,7 @@
   border: none;
   background-color: transparent;
   font-size: 14px;
-  color: #FFF;
+  color: #fff;
   width: fit-content;
   cursor: pointer;
 }
@@ -18,7 +18,7 @@
   flex-shrink: 0;
   padding: 8px;
   width: 100%;
-  gap:8px;
+  gap: 8px;
 }
 
 .question-input {
@@ -28,17 +28,17 @@
   padding: 8px 24px;
   border: none;
   border-radius: 20px;
-  background-color: #272F3E;
+  background-color: #272f3e;
   width: 100%;
   font-size: 14px;
-  color: #D0D7E4;
+  color: #d0d7e4;
 }
 
 .question-input::placeholder {
-  color: #D0D7E4;
+  color: #d0d7e4;
 }
 
-.submit-button {
+.send-button {
   align-self: end;
   height: 50px;
   aspect-ratio: 1;

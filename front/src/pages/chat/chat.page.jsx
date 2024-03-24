@@ -1,6 +1,6 @@
 import React from 'react';
-import { Chat } from '../../components/chat/chat.component';
-import { Input } from '../../components/input/input.component';
+import { Chat } from '../../components/chat';
+import { Input } from '../../components/input';
 
 const historicMock = [
   { question: 'Olá', response: 'Olá, como posso te ajudar?' },

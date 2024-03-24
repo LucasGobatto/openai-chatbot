@@ -1,4 +1,5 @@
 .historic-container {
+  position: relative;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -11,7 +12,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-} 
+}
 
 .align-right {
   align-self: flex-end;
@@ -37,7 +38,7 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #181F2C;
+  background-color: #181f2c;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,4 +59,18 @@
 
 .ai-response {
   text-align: left;
+}
+
+.back {
+  position: sticky;
+  top: 0;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  color: #d0d7e4;
+  text-decoration: none;
+}
+
+.back:hover {
+  text-decoration: underline;
 }

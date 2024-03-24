@@ -1,5 +1,6 @@
-import * as React from 'react';
 import PropTypes from 'prop-types';
+import * as React from 'react';
+import { FaChevronRight } from 'react-icons/fa';
 import './styles.css';
 
 export function Input({ onSubmit }) {
@@ -24,8 +25,8 @@ export function Input({ onSubmit }) {
         onChange={(event) => setQuestion(event.target.value)}
         onInput={handleInput}
       />
-      <button className='submit-button' type='submit'>
-        {'>'}
+      <button className='send-button' type='submit'>
+        <FaChevronRight />
       </button>
     </form>
   );

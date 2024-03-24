@@ -20,9 +20,17 @@ h4,
 h5,
 h6,
 label,
+a,
 span,
 button,
+pre,
+textarea,
 ::placeholder {
   font-family: 'Inter', sans-serif;
   color: #d0d7e4;
+}
+
+::placeholder {
+  font-family: 'Inter', sans-serif;
+  color: #8f949c;
 }
