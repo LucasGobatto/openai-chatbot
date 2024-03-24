@@ -1,25 +1,50 @@
+.back {
+  padding: 8px;
+  border: none;
+  background-color: transparent;
+  font-size: 14px;
+  color: #fff;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
 .user-form {
   display: flex;
-  padding: 10px;
+  background-color: #070a0e;
+  flex-shrink: 0;
+  padding: 8px;
   width: 100%;
+  gap: 8px;
 }
 
 .question-input {
-  margin: 10px 0 10px 10px;
-  padding: 10px;
-  border: 1px solid #11161f;
-  border-radius: 5px 0 0 5px;
-  background-color: #181f2c;
+  resize: none;
+  max-height: 140px;
+  height: 50px;
+  padding: 8px 24px;
+  border: none;
+  border-radius: 20px;
+  background-color: #272f3e;
   width: 100%;
+  font-size: 14px;
   color: #d0d7e4;
 }
 
-.submit-button {
-  margin: 10px 10px 10px 0;
-  border-radius: 0 5px 5px 0;
-  padding: 10px;
-  border: 1px solid #11161f;
-  background-color: #181f2c;
+.question-input::placeholder {
   color: #d0d7e4;
+}
+
+.send-button {
+  align-self: end;
+  height: 50px;
+  aspect-ratio: 1;
+  border-radius: 100%;
+  border: none;
+  background-color: #2E69FF;
+  color: #D0D7E4;
   cursor: pointer;
 }

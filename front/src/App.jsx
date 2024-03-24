@@ -1,20 +1,6 @@
-import * as React from 'react';
-import { Input } from './components/input';
-import { Chat } from './components/chat';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './router';
 
 export function App() {
-  const [historic, setHistoric] = React.useState([])
-
-  function handleMessage(question) {
-    // TODO send message to server
-    const mockerdData = "response"
-    setHistoric([...historic, { question, response: mockerdData }])
-  }
-
-  return (
-    <>
-      <Chat historic={historic} />
-      <Input onSubmit={handleMessage}/>
-    </>
-   )
+  return <RouterProvider router={router} />;
 }

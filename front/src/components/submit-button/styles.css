@@ -1,0 +1,11 @@
+.submit-button {
+  min-width: 80px;
+  background-color: #2e89ff;
+  color: #181f2c;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  margin: auto;
+}

@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: system-ui;
 }
 
 #root {
@@ -10,4 +9,28 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+p,
+input,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+a,
+span,
+button,
+pre,
+textarea,
+::placeholder {
+  font-family: 'Inter', sans-serif;
+  color: #d0d7e4;
+}
+
+::placeholder {
+  font-family: 'Inter', sans-serif;
+  color: #8f949c;
 }

@@ -2,7 +2,7 @@
 
 ### Motivação
 
-Monorepo que abriga o frontend e o backend da aplicação Job Interview Assistance, a qual baseia-se em uma plataforma que conversa com o uma inteligência artificial (ChatGPT) focando em auxiliar um candidato a uma vaga de trabalho, de modo que a IA forneça as potenciais perguntas que seriam feitas e insights sobre os pontos que o candidato deveria abordar em sua fala, de modo a melhorar a sua afinidade com a vaga. Além disso, baseado no curriculo, a IA vai analisar se as capacidades do candidato dão "match" com a vaga.
+Monorepo que abriga o frontend e o backend da aplicação Job Interview Assistance, a qual baseia-se em uma plataforma que conversa com o uma inteligência artificial (ChatGPT) focando em auxiliar um especialista de RH (recursos humanos) a analisar candidatos para uma vaga de trabalho, de modo que a IA forneça as melhores perguntas que seriam feitas e insights sobre os pontos que o especialista deveria abordar em sua fala, de modo a ajudá-lo a extrair as informções do candidato no momento da entrevista. Além disso, baseado no curriculo, a IA deve analisar se as capacidades do candidato dão "match" com a vaga.
 
 A motivação para este projeto é estudar o front com a tecnologia do React e o backend com NodeJS, e será a entrega final das disciplinas de Frontend e Backend no curso de pós graduação, [Tecnologia da Informação](https://maua.br/pos-graduacao/especializacao-360h/tecnologia-da-informacao), do [Instituto de Tecnologia Mauá](https://maua.br/).
 
