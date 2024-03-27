@@ -6,6 +6,7 @@
   overflow-y: auto;
   gap: 24px;
   padding: 24px 48px;
+  padding-top: 48px;
 }
 
 .message-container {
@@ -62,13 +63,18 @@
 }
 
 .back {
-  position: sticky;
+  position: fixed;
+  padding: 8px;
+  background-color: #181f2c;
+  width: 100%;
   top: 0;
+  left: 24px;
   display: flex;
   gap: 4px;
   align-items: center;
   color: #d0d7e4;
   text-decoration: none;
+  font-size: 14px;
 }
 
 .back:hover {
