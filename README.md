@@ -15,4 +15,4 @@ A motivação para este projeto é estudar o front com a tecnologia do React e o
 ### Como executar
 
 - [Front](./front/README.md)
-- Servidor - In progress...
+- [Back](./back/README.md)
