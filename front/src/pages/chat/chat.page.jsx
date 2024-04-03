@@ -1,6 +1,7 @@
 import React from 'react';
 import { Chat } from '../../components/chat';
 import { Input } from '../../components/input';
+import { SuggestionedQuestions } from '../../components/suggested-questions';
 
 const historicMock = [
   { question: 'Olá', response: 'Olá, como posso te ajudar?' },
@@ -12,11 +13,22 @@ const historicMock = [
   },
 ];
 
+const templates = [
+  {
+    question: 'Lorem ipsum?',
+    onClick: () => alert('In progress...'),
+  },
+  {
+    question: 'Lorem ipsum?',
+    onClick: () => alert('In progress...'),
+  },
+];
+
 export function ChatPage() {
   const [historic, setHistoric] = React.useState(historicMock);
 
   function handleMessage(question) {
-    // TODO send message to server
+    // TODO - send message to server
     const mockerdData = 'response';
     setHistoric([...historic, { question, response: mockerdData }]);
   }
@@ -24,6 +36,7 @@ export function ChatPage() {
   return (
     <>
       <Chat historic={historic} />
+      <SuggestionedQuestions templates={templates} />
       <Input onSubmit={handleMessage} />
     </>
   );
