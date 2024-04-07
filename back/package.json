@@ -1,15 +1,20 @@
 {
   "name": "openai-chatbot",
   "version": "1.0.0",
+  "type": "module",
   "description": "Monorepo que abriga o frontend e o backend da aplicação Job Interview Assistance, a qual baseia-se em uma plataforma que conversa com o uma inteligência artificial (ChatGPT) focando em auxiliar um especialista de RH (recursos humanos) a analisar candidatos para uma vaga de trabalho, de modo que a IA forneça as melhores perguntas que seriam feitas e insights sobre os pontos que o especialista deveria abordar em sua fala, de modo a ajudá-lo a extrair as informções do candidato no momento da entrevista. Além disso, baseado no curriculo, a IA deve analisar se as capacidades do candidato dão \"match\" com a vaga.",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "http": "^0.0.1-security"
+    "express": "4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "3.1.0"
   }
 }
