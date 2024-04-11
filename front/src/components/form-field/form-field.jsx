@@ -12,6 +12,7 @@ export function FormField(props) {
           minLength={6}
           required={props.required}
           name={props.name}
+          defaultValue={props.initialValue}
         />
       ) : (
         <input
@@ -20,6 +21,7 @@ export function FormField(props) {
           minLength={6}
           required={props.required}
           name={props.name}
+          defaultValue={props.initialValue}
         />
       )}
     </div>
@@ -32,4 +34,5 @@ FormField.propTypes = {
   required: PropTypes.bool,
   multiline: PropTypes.bool,
   name: PropTypes.string.isRequired,
+  initialValue: PropTypes.string,
 };

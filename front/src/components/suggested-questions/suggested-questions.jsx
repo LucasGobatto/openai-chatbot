@@ -14,6 +14,7 @@ export function SuggestionedQuestions(props) {
     </div>
   );
 }
+
 SuggestionedQuestions.propTypes = {
   templates: PropTypes.arrayOf(
     PropTypes.shape({
