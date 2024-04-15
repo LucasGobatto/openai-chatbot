@@ -9,9 +9,11 @@ db.prepare(
   CREATE TABLE IF NOT EXISTS logs (
     id INTEGER PRIMARY KEY, 
     created_at TEXT,
-    gpt_prompt TEXT, 
-    user_question TEXT,
-    gpt_response TEXT
+    status INTEGER,
+    route TEXT,
+    method TEXT,
+    input TEXT,
+    error TEXT NULL
   )
 `,
 ).run();
