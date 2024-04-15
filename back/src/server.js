@@ -4,9 +4,32 @@ import { DatabaseManager } from './db/db.manager.js';
 const app = express();
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.get('/consultar', (req, res) => {
+  DatabaseManager.saveLog({
+    route: '/consultar',
+    method: 'GET',
+    input: JSON.stringify(req.body),
+    error: null,
+    status: 200,
+  });
+
+  const logs = DatabaseManager.findAllLogs();
+
+  const logsParsed = logs.map((log) => ({
+    ...log,
+    input: jsonSafeParse(log.input),
+  }));
+
+  return res.json({ data: logsParsed, error: null });
 });
+
+function jsonSafeParse(obj) {
+  try {
+    return JSON.parse(obj);
+  } catch {
+    return obj;
+  }
+}
 
 // Endpoint para salvar um log
 app.post('/question', (req, res) => {
@@ -14,29 +37,36 @@ app.post('/question', (req, res) => {
 
   if (!body || !body.userQuestion || !body.gptResponse) {
     // TODO - poderiamos melhorar a mensagem de erro para avisar qual campo é obrigatório
+    DatabaseManager.saveLog({
+      route: '/question',
+      method: 'POST',
+      input: JSON.stringify(body),
+      error: 'Campos obrigatorios não preenchidos',
+      status: 400,
+    });
+
     return res.status(400).json({ data: null, error: 'Campos obrigatorios não preenchidos' });
   }
 
-  const createdAt = new Date().toISOString();
-
-  // TODO - este campo deverá ser preenchido automaticamente pelo servidor
-  const gptPrompt = 'Lorem ipsum';
-
   try {
     DatabaseManager.saveLog({
-      gptPrompt,
-      userQuestion: body.userQuestion,
-      gptResponse: body.gptResponse,
-      createdAt,
+      route: '/question',
+      method: 'POST',
+      input: JSON.stringify(body),
+      error: null,
+      status: 201,
     });
 
-    // Retorna o log salvo no banco
-    // Utiliza a data de criação pois é o campo mais único possível dentro do contexto
-    const savedLog = DatabaseManager.findByCreationDate(createdAt);
-
-    return res.status(201).json({ data: savedLog, error: null });
+    return res.status(201).json({ data: { response: 'Lorem ipsum' }, error: null });
   } catch (error) {
     console.error(error);
+    DatabaseManager.saveLog({
+      route: '/question',
+      method: 'POST',
+      input: JSON.stringify(body),
+      error: 'Erro ao salvar o log',
+      status: 500,
+    });
     return res.status(500).send('Erro ao salvar o log');
   }
 });
