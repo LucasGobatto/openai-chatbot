@@ -19,14 +19,32 @@ export const JobVacancyDescriptionContext = React.createContext({
 });
 
 export const JobVacancyDescriptionProvider = (props) => {
-  const [details, setDetails] = React.useState();
+  const cache = JSONSafeParse(localStorage.getItem('job-vacancy-description'));
+
+  const [details, setDetails] = React.useState(cache);
+
+  const updateDetails = React.useCallback(
+    (newDetails) => {
+      localStorage.setItem('job-vacancy-description', JSON.stringify(newDetails));
+      setDetails(newDetails);
+    },
+    [setDetails],
+  );
 
   return (
-    <JobVacancyDescriptionContext.Provider value={{ details, setDetails }}>
+    <JobVacancyDescriptionContext.Provider value={{ details, setDetails: updateDetails }}>
       {props.children}
     </JobVacancyDescriptionContext.Provider>
   );
 };
+
+function JSONSafeParse(value) {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
 
 JobVacancyDescriptionProvider.propTypes = {
   children: PropTypes.any.isRequired,
