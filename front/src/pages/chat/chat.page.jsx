@@ -1,5 +1,6 @@
 import { Chat } from '../../components/chat';
 import { Input } from '../../components/input';
+import { useDeviceIdQuery } from '../../data/use-device-id-query';
 import { useHistoricQuery } from '../../data/use-historic-query';
 import { useDeviceId } from '../../hooks';
 
@@ -12,8 +13,12 @@ import { useDeviceId } from '../../hooks';
 // ];
 
 export function ChatPage() {
-  const { deviceId } = useDeviceId();
+  const { deviceId, setDeviceId } = useDeviceId();
 
+  useDeviceIdQuery({
+    shouldFetchNewId: false, // TODO - change to !deviceId when API is ready,
+    onSuccess: setDeviceId,
+  });
   const { historic, refetch } = useHistoricQuery(deviceId);
 
   function handleMessage(question) {

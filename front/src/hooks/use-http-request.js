@@ -1,7 +1,7 @@
 import React from 'react';
 
 export function useHttpRequest(params) {
-  const { route, method, body, skip } = params;
+  const { route, method, body, skip, onSuccess, onError } = params;
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
@@ -19,13 +19,15 @@ export function useHttpRequest(params) {
       .then((response) => response.json())
       .then((data) => {
         setData(data);
+        onSuccess && onSuccess(data);
         setLoading(false);
       })
       .catch((error) => {
         setError(error);
+        onError && onError(error);
         setLoading(false);
       });
-  }, [route, method, body]);
+  }, [route, method, body, onSuccess, onError]);
 
   React.useEffect(() => {
     if (!skip) {
