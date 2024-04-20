@@ -1,6 +1,11 @@
 import { RouterProvider } from 'react-router-dom';
+import { JobVacancyDescriptionProvider } from './providers';
 import { router } from './router';
 
 export function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <JobVacancyDescriptionProvider>
+      <RouterProvider router={router} />
+    </JobVacancyDescriptionProvider>
+  );
 }
