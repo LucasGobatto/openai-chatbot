@@ -1,6 +1,7 @@
 import { Chat } from '../../components/chat';
 import { Input } from '../../components/input';
 import { useHistoricQuery } from '../../data/use-historic-query';
+import { useDeviceId } from '../../hooks';
 
 // Templates for suggestioned questions
 // const templates = [
@@ -11,7 +12,9 @@ import { useHistoricQuery } from '../../data/use-historic-query';
 // ];
 
 export function ChatPage() {
-  const { historic, refetch } = useHistoricQuery();
+  const { deviceId } = useDeviceId();
+
+  const { historic, refetch } = useHistoricQuery(deviceId);
 
   function handleMessage(question) {
     // TODO - send message to server

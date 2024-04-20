@@ -1,5 +1,6 @@
-import React from 'react';
 import { PropTypes } from 'prop-types';
+import React from 'react';
+import { useLocalStorage } from '../hooks';
 
 /**
  * interface JobVacancyDescription {
@@ -19,16 +20,15 @@ export const JobVacancyDescriptionContext = React.createContext({
 });
 
 export const JobVacancyDescriptionProvider = (props) => {
-  const cache = JSONSafeParse(localStorage.getItem('job-vacancy-description'));
-
-  const [details, setDetails] = React.useState(cache);
+  const { set, get } = useLocalStorage('job-vacancy-description');
+  const [details, setDetails] = React.useState(get());
 
   const updateDetails = React.useCallback(
     (newDetails) => {
-      localStorage.setItem('job-vacancy-description', JSON.stringify(newDetails));
+      set(newDetails);
       setDetails(newDetails);
     },
-    [setDetails],
+    [set, setDetails],
   );
 
   return (
@@ -37,14 +37,6 @@ export const JobVacancyDescriptionProvider = (props) => {
     </JobVacancyDescriptionContext.Provider>
   );
 };
-
-function JSONSafeParse(value) {
-  try {
-    return JSON.parse(value);
-  } catch {
-    return value;
-  }
-}
 
 JobVacancyDescriptionProvider.propTypes = {
   children: PropTypes.any.isRequired,
