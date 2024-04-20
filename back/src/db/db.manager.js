@@ -1,7 +1,7 @@
-import { LogManager } from './log.manager.js';
-import { MessageManager } from './message.manager.js';
+import { LogsManager } from './logs.manager.js';
+import { MessagesManager } from './messages.manager.js';
 
 export class DatabaseManager {
-  static log = LogManager;
-  static message = MessageManager;
+  static logs = LogsManager;
+  static messages = MessagesManager;
 }

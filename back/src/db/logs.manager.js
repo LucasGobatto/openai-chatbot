@@ -1,6 +1,6 @@
 import { db } from './config.js';
 
-export class LogManager {
+export class LogsManager {
   static save({ createdAt, route, method, input, error, status }) {
     const insert = db.prepare(
       `

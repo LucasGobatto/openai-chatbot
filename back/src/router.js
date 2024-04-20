@@ -12,7 +12,7 @@ function jsonSafeParse(obj) {
 }
 
 router.get('/consultar', (req, res) => {
-  DatabaseManager.log.save({
+  DatabaseManager.logs.save({
     route: '/consultar',
     method: 'GET',
     input: JSON.stringify(req.body),
@@ -20,7 +20,7 @@ router.get('/consultar', (req, res) => {
     status: 200,
   });
 
-  const logs = DatabaseManager.log.findAll();
+  const logs = DatabaseManager.logs.findAll();
 
   const logsParsed = logs.map((log) => ({
     ...log,
@@ -36,7 +36,7 @@ router.post('/question', (req, res) => {
 
   if (!body || !body.userQuestion || !body.gptResponse) {
     // TODO - poderiamos melhorar a mensagem de erro para avisar qual campo é obrigatório
-    DatabaseManager.log.save({
+    DatabaseManager.logs.save({
       route: '/question',
       method: 'POST',
       input: JSON.stringify(body),
@@ -48,7 +48,7 @@ router.post('/question', (req, res) => {
   }
 
   try {
-    DatabaseManager.log.save({
+    DatabaseManager.logs.save({
       route: '/question',
       method: 'POST',
       input: JSON.stringify(body),
@@ -59,7 +59,7 @@ router.post('/question', (req, res) => {
     return res.status(201).json({ data: { response: 'Lorem ipsum' }, error: null });
   } catch (error) {
     console.error(error);
-    DatabaseManager.log.save({
+    DatabaseManager.logs.save({
       route: '/question',
       method: 'POST',
       input: JSON.stringify(body),

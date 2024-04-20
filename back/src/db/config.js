@@ -14,6 +14,22 @@ db.prepare(
     method TEXT,
     input TEXT,
     error TEXT NULL
-  )
+  );
+
+  CREATE TABLE IF NOT EXISTS devices (
+    id INTEGER PRIMARY KEY,
+    identifier varchar(36) UNIQUE, 
+    created_at TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY, 
+    created_at TEXT,
+    sent_at DateTime,
+    question TEXT,
+    response TEXT NULL,
+    device_id INTEGER,
+    FOREIGN KEY (device_id) REFERENCES devices(id)
+  );
 `,
 ).run();
