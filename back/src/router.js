@@ -34,7 +34,7 @@ router.get('/consultar', (req, res) => {
 router.post('/question', (req, res) => {
   const body = req.body;
 
-  if (!body || !body.userQuestion || !body.gptResponse) {
+  if (!body || !body.question || !body.deviceId) {
     // TODO - poderiamos melhorar a mensagem de erro para avisar qual campo é obrigatório
     DatabaseManager.logs.save({
       route: '/question',
@@ -47,7 +47,26 @@ router.post('/question', (req, res) => {
     return res.status(400).json({ data: null, error: 'Campos obrigatorios não preenchidos' });
   }
 
+  const device = DatabaseManager.devices.findByIdentifier(body.deviceId);
+
+  if (!device) {
+    DatabaseManager.logs.save({
+      route: '/question',
+      method: 'POST',
+      input: JSON.stringify(body),
+      error: 'Device não encontrado',
+      status: 404,
+    });
+
+    return res.status(404).json({ data: null, error: 'Dispositivo não encontrado' });
+  }
+
   try {
+    DatabaseManager.messages.save({
+      question: body.question,
+      deviceId: device.id,
+    });
+
     DatabaseManager.logs.save({
       route: '/question',
       method: 'POST',
@@ -56,16 +75,28 @@ router.post('/question', (req, res) => {
       status: 201,
     });
 
-    return res.status(201).json({ data: { response: 'Lorem ipsum' }, error: null });
+    // TODO - change this to a real GPT call
+    const mockedResponse = 'Lorem ipsum';
+
+    DatabaseManager.messages.updateResponse({
+      response: mockedResponse,
+      id: 1,
+    });
+
+    return res.status(200).json({ data: { response: mockedResponse }, error: null });
   } catch (error) {
     console.error(error);
     DatabaseManager.logs.save({
       route: '/question',
       method: 'POST',
       input: JSON.stringify(body),
-      error: 'Erro ao salvar o log',
+      error: error.message,
       status: 500,
     });
-    return res.status(500).send('Erro ao salvar o log');
+
+    // The idea here is to return a friendly message to the user
+    // simulating a real GPT message
+    const bealtifiedErrorMessage = 'Ops, não consegui obter uma resposta para você. Tente novamente mais tarde';
+    return res.status(200).send({ data: bealtifiedErrorMessage, error: null });
   }
 });
