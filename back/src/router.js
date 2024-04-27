@@ -33,7 +33,14 @@ router.get('/consultar', (req, res) => {
 router.post('/messages', (req, res) => {
   const body = req.body;
 
-  if (!body || !body.question || !body.deviceId) {
+  if (
+    !body ||
+    !body.question ||
+    !body.deviceId ||
+    !body.vacancyContext ||
+    !body.vacancyContext.role ||
+    !body.vacancyContext.description
+  ) {
     // TODO - poderiamos melhorar a mensagem de erro para avisar qual campo é obrigatório
     DatabaseManager.logs.save({
       route: '/messages',

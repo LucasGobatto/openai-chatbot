@@ -8,8 +8,8 @@ export function useQuestionQuery(params) {
   const { data, error, loading } = useHttpRequest({
     route: '/messages',
     method: 'POST',
-    skip: !shouldTrigger && !question,
-    body: { deviceId: params.deviceId, question },
+    skip: !shouldTrigger || !question || !params.details || !params.details.hole || !params.details.description,
+    body: { deviceId: params.deviceId, question, vacancyContext: params.details },
     onSuccess: handleSuccess,
     onError: handleError,
   });

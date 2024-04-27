@@ -4,7 +4,7 @@ import { Input } from '../../components/input';
 import { useDeviceIdQuery } from '../../data/use-device-id-query';
 import { useHistoricQuery } from '../../data/use-historic-query';
 import { useQuestionQuery } from '../../data/use-question-query';
-import { useDeviceId } from '../../hooks';
+import { useDeviceId, useJobVacancyDescription } from '../../hooks';
 
 // Templates for suggestioned questions
 // const templates = [
@@ -17,6 +17,7 @@ import { useDeviceId } from '../../hooks';
 export function ChatPage() {
   const [tempQuestion, setTempQuestion] = React.useState('');
   const { deviceId, setDeviceId } = useDeviceId();
+  const { details } = useJobVacancyDescription();
 
   useDeviceIdQuery({
     shouldFetchNewId: !deviceId,
@@ -26,7 +27,7 @@ export function ChatPage() {
 
   const { historic, refetch: refetchHistoric } = useHistoricQuery({
     deviceId,
-    onSuccess: handleSuccess,
+    onSuccess: () => setTempQuestion(''),
     onError: (error) => {
       alert(error);
       setDeviceId(null);
@@ -35,13 +36,10 @@ export function ChatPage() {
 
   const { sendQuestion } = useQuestionQuery({
     deviceId,
+    details,
     onSuccess: refetchHistoric,
     onError: alert,
   });
-
-  function handleSuccess() {
-    setTempQuestion('');
-  }
 
   function handleMessage(question) {
     setTempQuestion(question);
