@@ -25,16 +25,16 @@ export const DeviceIdProvider = (props) => {
 
   const [deviceId, setDeviceId] = React.useState(cache);
 
-  const updateDetails = React.useCallback(
-    (newDetails) => {
-      set(newDetails);
-      setDeviceId(newDetails);
+  const updateDeviceId = React.useCallback(
+    (newDeviceId) => {
+      set(newDeviceId);
+      setDeviceId(newDeviceId);
     },
     [set, setDeviceId],
   );
 
   return (
-    <DeviceIdContext.Provider value={{ deviceId, setDeviceId: updateDetails }}>
+    <DeviceIdContext.Provider value={{ deviceId, setDeviceId: updateDeviceId }}>
       {props.children}
     </DeviceIdContext.Provider>
   );

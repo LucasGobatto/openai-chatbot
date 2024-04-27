@@ -1,7 +1,9 @@
+import React from 'react';
 import { Chat } from '../../components/chat';
 import { Input } from '../../components/input';
 import { useDeviceIdQuery } from '../../data/use-device-id-query';
 import { useHistoricQuery } from '../../data/use-historic-query';
+import { useQuestionQuery } from '../../data/use-question-query';
 import { useDeviceId } from '../../hooks';
 
 // Templates for suggestioned questions
@@ -13,25 +15,47 @@ import { useDeviceId } from '../../hooks';
 // ];
 
 export function ChatPage() {
+  const [tempQuestion, setTempQuestion] = React.useState('');
   const { deviceId, setDeviceId } = useDeviceId();
 
   useDeviceIdQuery({
-    shouldFetchNewId: false, // TODO - change to !deviceId when API is ready,
+    shouldFetchNewId: !deviceId,
     onSuccess: setDeviceId,
+    onError: alert,
   });
-  const { historic, refetch } = useHistoricQuery(deviceId);
+
+  const { historic, refetch: refetchHistoric } = useHistoricQuery({
+    deviceId,
+    onSuccess: handleSuccess,
+    onError: (error) => {
+      alert(error);
+      setDeviceId(null);
+    },
+  });
+
+  const { sendQuestion } = useQuestionQuery({
+    deviceId,
+    onSuccess: refetchHistoric,
+    onError: alert,
+  });
+
+  function handleSuccess() {
+    setTempQuestion('');
+  }
 
   function handleMessage(question) {
-    // TODO - send message to server
-    // sendQuestion(question);
-
-    // Obs: refetch will not request the question when the API is ready
-    refetch(question);
+    setTempQuestion(question);
+    sendQuestion(question);
   }
+
+  const aggregatedHistory = [
+    ...historic,
+    ...(tempQuestion ? [{ question: tempQuestion, response: '...', date: new Date().toISOString() }] : []),
+  ];
 
   return (
     <>
-      <Chat historic={historic} />
+      <Chat historic={aggregatedHistory} />
       {/* TODO - Validar se iremos colocar */}
       {/* <SuggestionedQuestions templates={templates} /> */}
       <Input onSubmit={handleMessage} />

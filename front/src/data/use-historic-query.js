@@ -1,34 +1,23 @@
 import React from 'react';
 import { useHttpRequest } from '../hooks';
 
-const historicMock = [
-  { question: 'Olá', response: 'Olá, como posso te ajudar?', date: '2024-04-18T12:00:00.000Z' },
-  { question: 'Como você está?', response: 'Estou bem, obrigado por perguntar', date: '2024-04-18T12:00:00.000Z' },
-  {
-    question: 'De um exemplo de lorem',
-    response:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc ultricies ultricies. Nullam nec purus nec nunc ultricies ultricies.',
-    date: '2024-04-19T12:00:00.000Z',
-  },
-];
+export function useHistoricQuery({ deviceId, onSuccess, onError }) {
+  // We are not using the data from the request, because this request
+  // must be triggered only once, and the data is stored in the state
+  const [historic, setHistoric] = React.useState([]);
 
-const mockedRespose = 'Esta é um resposta padrão enquanto a API não estiver pronta';
-
-export function useHistoricQuery(deviceId) {
-  const [historic, setHistoric] = React.useState(historicMock);
-
-  const { error, loading } = useHttpRequest({
-    route: '/historic',
+  const { error, loading, refetch } = useHttpRequest({
+    route: `/messages/${deviceId}`,
     method: 'GET',
-    skip: !deviceId,
+    skip: !deviceId || historic.length > 0,
+    onSuccess: handleSuccess,
+    onError,
   });
 
-  // TODO - remove this when the API is ready and use the refetch function
-  function customRefetch(question) {
-    const newHistoric = [...historic, { question, response: mockedRespose, date: new Date().toISOString() }];
-    setHistoric(newHistoric);
+  function handleSuccess(data) {
+    setHistoric(data.map((res) => ({ date: res.sent_at, question: res.question, response: res.response })));
+    onSuccess && onSuccess(data);
   }
 
-  // TODO - change to `data` when the API is ready
-  return { historic: historic, error, loading, refetch: customRefetch };
+  return { historic, error, loading, refetch };
 }

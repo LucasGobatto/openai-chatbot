@@ -1,11 +1,12 @@
 import { useHttpRequest } from '../hooks';
 
-export function useDeviceIdQuery({ shouldFetchNewId = false, onSuccess }) {
+export function useDeviceIdQuery({ shouldFetchNewId = false, onSuccess, onError }) {
   const { data, loading, error } = useHttpRequest({
     route: '/device-id',
-    method: 'GET',
+    method: 'POST',
     skip: !shouldFetchNewId,
     onSuccess,
+    onError,
   });
 
   return {
