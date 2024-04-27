@@ -14,13 +14,13 @@ const historicMock = [
 
 const mockedRespose = 'Esta é um resposta padrão enquanto a API não estiver pronta';
 
-export function useHistoricQuery() {
+export function useHistoricQuery(deviceId) {
   const [historic, setHistoric] = React.useState(historicMock);
 
   const { error, loading } = useHttpRequest({
     route: '/historic',
     method: 'GET',
-    skip: true, // TODO - change to false when the API is ready
+    skip: !deviceId,
   });
 
   // TODO - remove this when the API is ready and use the refetch function
