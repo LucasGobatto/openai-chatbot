@@ -10,12 +10,16 @@ export function Chat({ historic }) {
   const containerRef = React.useRef(null);
 
   const historyGroupedByDate = historic.reduce((acc, { question, response, date }) => {
+    const isTodayDate = new Date(date).toDateString() === new Date().toDateString();
     const dateWithoutTime = date.split('T')[0].split('-').reverse().join('/');
-    if (!acc[dateWithoutTime]) {
-      acc[dateWithoutTime] = [];
+
+    const dateString = isTodayDate ? 'Hoje' : dateWithoutTime;
+
+    if (!acc[dateString]) {
+      acc[dateString] = [];
     }
 
-    acc[dateWithoutTime].push({ question, response });
+    acc[dateString].push({ question, response });
     return acc;
   }, {});
 
