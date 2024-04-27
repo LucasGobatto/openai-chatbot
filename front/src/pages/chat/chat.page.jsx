@@ -1,17 +1,6 @@
-import React from 'react';
 import { Chat } from '../../components/chat';
 import { Input } from '../../components/input';
-
-const historicMock = [
-  { question: 'Olá', response: 'Olá, como posso te ajudar?', date: '2024-04-18T12:00:00.000Z' },
-  { question: 'Como você está?', response: 'Estou bem, obrigado por perguntar', date: '2024-04-18T12:00:00.000Z' },
-  {
-    question: 'De um exemplo de lorem',
-    response:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc ultricies ultricies. Nullam nec purus nec nunc ultricies ultricies.',
-    date: '2024-04-19T12:00:00.000Z',
-  },
-];
+import { useHistoricQuery } from '../../data/use-historic-query';
 
 // Templates for suggestioned questions
 // const templates = [
@@ -19,19 +8,17 @@ const historicMock = [
 //     question: 'Lorem ipsum?',
 //     onClick: () => alert('In progress...'),
 //   },
-//   {
-//     question: 'Lorem ipsum?',
-//     onClick: () => alert('In progress...'),
-//   },
 // ];
 
 export function ChatPage() {
-  const [historic, setHistoric] = React.useState(historicMock);
+  const { historic, refetch } = useHistoricQuery();
 
   function handleMessage(question) {
     // TODO - send message to server
-    const mockerdData = 'response';
-    setHistoric([...historic, { question, response: mockerdData, date: new Date().toISOString() }]);
+    // sendQuestion(question);
+
+    // Obs: refetch will not request the question when the API is ready
+    refetch(question);
   }
 
   return (
