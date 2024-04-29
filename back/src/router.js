@@ -30,14 +30,20 @@ router.get('/consultar', (req, res) => {
   return res.json({ data: logsParsed, error: null });
 });
 
-// Endpoint para salvar um log
-router.post('/question', (req, res) => {
+router.post('/messages', (req, res) => {
   const body = req.body;
 
-  if (!body || !body.question || !body.deviceId) {
+  if (
+    !body ||
+    !body.question ||
+    !body.deviceId ||
+    !body.vacancyContext ||
+    !body.vacancyContext.role ||
+    !body.vacancyContext.description
+  ) {
     // TODO - poderiamos melhorar a mensagem de erro para avisar qual campo é obrigatório
     DatabaseManager.logs.save({
-      route: '/question',
+      route: '/messages',
       method: 'POST',
       input: JSON.stringify(body),
       error: 'Campos obrigatorios não preenchidos',
@@ -51,7 +57,7 @@ router.post('/question', (req, res) => {
 
   if (!device) {
     DatabaseManager.logs.save({
-      route: '/question',
+      route: '/messages',
       method: 'POST',
       input: JSON.stringify(body),
       error: 'Device não encontrado',
@@ -62,13 +68,13 @@ router.post('/question', (req, res) => {
   }
 
   try {
-    DatabaseManager.messages.save({
+    const { lastInsertRowid: messageId } = DatabaseManager.messages.save({
       question: body.question,
       deviceId: device.id,
     });
 
     DatabaseManager.logs.save({
-      route: '/question',
+      route: '/messages',
       method: 'POST',
       input: JSON.stringify(body),
       error: null,
@@ -76,18 +82,20 @@ router.post('/question', (req, res) => {
     });
 
     // TODO - change this to a real GPT call
-    const mockedResponse = 'Lorem ipsum';
+    const mockedResponse = 'O sistema ainda não foi integrado com a IA';
 
     DatabaseManager.messages.updateResponse({
       response: mockedResponse,
-      id: 1,
+      id: messageId,
     });
 
-    return res.status(200).json({ data: { response: mockedResponse }, error: null });
+    return res
+      .status(200)
+      .json({ data: { response: mockedResponse, question: body.question, date: new Date() }, error: null });
   } catch (error) {
     console.error(error);
     DatabaseManager.logs.save({
-      route: '/question',
+      route: '/messages',
       method: 'POST',
       input: JSON.stringify(body),
       error: error.message,
@@ -97,6 +105,75 @@ router.post('/question', (req, res) => {
     // The idea here is to return a friendly message to the user
     // simulating a real GPT message
     const bealtifiedErrorMessage = 'Ops, não consegui obter uma resposta para você. Tente novamente mais tarde';
-    return res.status(200).send({ data: bealtifiedErrorMessage, error: null });
+    return res.status(200).json({ data: bealtifiedErrorMessage, error: null });
   }
+});
+
+router.post('/device-id', (_req, res) => {
+  try {
+    const identifier = crypto.randomUUID();
+
+    const deviceId = DatabaseManager.devices.save({ identifier });
+    DatabaseManager.logs.save({
+      route: '/device-id',
+      method: 'POST',
+      input: null,
+      error: null,
+      status: 200,
+    });
+
+    return res.status(200).json({ data: deviceId, error: null });
+  } catch (error) {
+    console.error(error);
+    DatabaseManager.logs.save({
+      route: '/device-id',
+      method: 'POST',
+      input: null,
+      error: error.message,
+      status: 500,
+    });
+    return res.status(500).json({ data: null, error: 'Erro ao gerar um novo device id' });
+  }
+});
+
+router.get('/messages/:deviceId', (req, res) => {
+  const { deviceId } = req.params;
+
+  if (!deviceId) {
+    DatabaseManager.logs.save({
+      route: '/messages/:deviceId',
+      method: 'GET',
+      input: JSON.stringify(req.params),
+      error: 'DeviceId não informado',
+      status: 400,
+    });
+
+    return res.status(400).json({ data: null, error: 'DeviceId não informado' });
+  }
+
+  const device = DatabaseManager.devices.findByIdentifier(deviceId);
+
+  if (!device) {
+    DatabaseManager.logs.save({
+      route: '/messages/:deviceId',
+      method: 'GET',
+      input: JSON.stringify(req.params),
+      error: 'Device não encontrado',
+      status: 404,
+    });
+
+    return res.status(404).json({ data: null, error: 'Dispositivo não encontrado' });
+  }
+
+  const messages = DatabaseManager.messages.findManyByDeviceId(device.id);
+
+  DatabaseManager.logs.save({
+    route: '/messages/:deviceId',
+    method: 'GET',
+    input: JSON.stringify(req.params),
+    error: null,
+    status: 200,
+  });
+
+  return res.status(200).json({ data: messages, error: null });
 });

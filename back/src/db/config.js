@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3';
 import path from 'node:path';
 
 // creates an database instance in file `database.db`
-export const db = sqlite(path.join(process.cwd(), './database.db'), { verbose: console.log });
+export const db = sqlite(path.join(process.cwd(), './database.db'));
 
 db.prepare(
   `
@@ -23,7 +23,7 @@ db.prepare(
     CREATE TABLE IF NOT EXISTS messages (
       id INTEGER PRIMARY KEY, 
       created_at TEXT,
-      sent_at DateTime,
+      sent_at TEXT,
       question TEXT,
       response TEXT NULL,
       device_id INTEGER,

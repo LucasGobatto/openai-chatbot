@@ -1,4 +1,4 @@
-import { db } from './config';
+import { db } from './config.js';
 
 export class MessagesManager {
   static save({ question, response, deviceId }) {
@@ -9,7 +9,7 @@ export class MessagesManager {
       `,
     );
 
-    return insert.run(new Date(), new Date(), question, response || null, deviceId);
+    return insert.run(new Date().toISOString(), new Date().toISOString(), question, response || null, deviceId);
   }
 
   static updateResponse({ id, response }) {

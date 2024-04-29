@@ -1,8 +1,10 @@
+import React from 'react';
 import { Chat } from '../../components/chat';
 import { Input } from '../../components/input';
 import { useDeviceIdQuery } from '../../data/use-device-id-query';
 import { useHistoricQuery } from '../../data/use-historic-query';
-import { useDeviceId } from '../../hooks';
+import { useQuestionQuery } from '../../data/use-question-query';
+import { useDeviceId, useJobVacancyDescription } from '../../hooks';
 
 // Templates for suggestioned questions
 // const templates = [
@@ -13,25 +15,45 @@ import { useDeviceId } from '../../hooks';
 // ];
 
 export function ChatPage() {
+  const [tempQuestion, setTempQuestion] = React.useState('');
   const { deviceId, setDeviceId } = useDeviceId();
+  const { details } = useJobVacancyDescription();
 
   useDeviceIdQuery({
-    shouldFetchNewId: false, // TODO - change to !deviceId when API is ready,
+    shouldFetchNewId: !deviceId,
     onSuccess: setDeviceId,
+    onError: alert,
   });
-  const { historic, refetch } = useHistoricQuery(deviceId);
+
+  const { historic, refetch: refetchHistoric } = useHistoricQuery({
+    deviceId,
+    onSuccess: () => setTempQuestion(''),
+    onError: (error) => {
+      alert(error);
+      setDeviceId(null);
+    },
+  });
+
+  const { sendQuestion } = useQuestionQuery({
+    deviceId,
+    details,
+    onSuccess: refetchHistoric,
+    onError: alert,
+  });
 
   function handleMessage(question) {
-    // TODO - send message to server
-    // sendQuestion(question);
-
-    // Obs: refetch will not request the question when the API is ready
-    refetch(question);
+    setTempQuestion(question);
+    sendQuestion(question);
   }
+
+  const aggregatedHistory = [
+    ...historic,
+    ...(tempQuestion ? [{ question: tempQuestion, response: '...', date: new Date().toISOString() }] : []),
+  ];
 
   return (
     <>
-      <Chat historic={historic} />
+      <Chat historic={aggregatedHistory} />
       {/* TODO - Validar se iremos colocar */}
       {/* <SuggestionedQuestions templates={templates} /> */}
       <Input onSubmit={handleMessage} />

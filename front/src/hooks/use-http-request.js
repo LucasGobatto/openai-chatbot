@@ -1,14 +1,40 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 export function useHttpRequest(params) {
   const { route, method, body, skip, onSuccess, onError } = params;
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
-  const triggerRequest = React.useCallback(() => {
+  if (!route || !method) {
+    throw new Error('You must provide a route and a method');
+  }
+
+  const handleSuccess = React.useCallback(
+    (response) => {
+      const data = mapResponse(response);
+
+      setData(data);
+      onSuccess && onSuccess(data);
+    },
+    [setData, onSuccess],
+  );
+
+  const handleError = React.useCallback(
+    (data) => {
+      const error = mapError(data);
+
+      setError(error);
+      onError && onError(error);
+    },
+    [setError, onError],
+  );
+
+  const triggerRequest = useCallback(() => {
+    setLoading(true);
     const baseUrl = import.meta.env.VITE_API_URL;
     const url = `${baseUrl}${route}`;
+
     fetch(url, {
       method,
       headers: {
@@ -18,26 +44,34 @@ export function useHttpRequest(params) {
     })
       .then((response) => response.json())
       .then((data) => {
-        setData(data);
-        onSuccess && onSuccess(data);
-        setLoading(false);
+        if (data.error) {
+          handleError(data);
+        } else {
+          handleSuccess(data);
+        }
       })
-      .catch((error) => {
-        setError(error);
-        onError && onError(error);
-        setLoading(false);
-      });
-  }, [route, method, body, onSuccess, onError]);
+      .catch(handleError)
+      .finally(() => setLoading(false));
+  }, [route, method, body, handleError, handleSuccess]);
 
   React.useEffect(() => {
-    if (!skip) {
+    if (!skip && !loading) {
       triggerRequest();
     }
-  }, [skip, triggerRequest]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [skip]);
 
   function refetch() {
     triggerRequest();
   }
 
   return { data, error, loading, refetch };
+}
+
+function mapResponse(data) {
+  return data.data;
+}
+
+function mapError(data) {
+  return data.error;
 }
