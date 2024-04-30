@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { HomePage, ChatPage } from './pages';
-
+import { RouteGuard } from './guard';
+import { ChatPage, HomePage } from './pages';
+import { DeviceIdProvider } from './providers';
 
 export const router = createBrowserRouter([
   {
@@ -9,6 +10,12 @@ export const router = createBrowserRouter([
   },
   {
     path: '/chat',
-    element: <ChatPage />,
-  }
+    element: (
+      <RouteGuard>
+        <DeviceIdProvider>
+          <ChatPage />
+        </DeviceIdProvider>
+      </RouteGuard>
+    ),
+  },
 ]);

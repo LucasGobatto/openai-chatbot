@@ -9,6 +9,18 @@
   padding-top: 48px;
 }
 
+.date-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-container > p {
+  margin-inline: auto;
+  padding: 8px;
+  background: #272f3e;
+  border-radius: 5px;
+}
+
 .message-container {
   display: flex;
   flex-direction: column;
@@ -79,4 +91,8 @@
 
 .back:hover {
   text-decoration: underline;
+}
+
+.back > p {
+  line-height: 1;
 }

@@ -1,42 +1,61 @@
 import React from 'react';
 import { Chat } from '../../components/chat';
 import { Input } from '../../components/input';
-import { SuggestionedQuestions } from '../../components/suggested-questions';
+import { useDeviceIdQuery } from '../../data/use-device-id-query';
+import { useHistoricQuery } from '../../data/use-historic-query';
+import { useQuestionQuery } from '../../data/use-question-query';
+import { useDeviceId, useJobVacancyDescription } from '../../hooks';
 
-const historicMock = [
-  { question: 'Olá', response: 'Olá, como posso te ajudar?' },
-  { question: 'Como você está?', response: 'Estou bem, obrigado por perguntar' },
-  {
-    question: 'De um exemplo de lorem',
-    response:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc ultricies ultricies. Nullam nec purus nec nunc ultricies ultricies.',
-  },
-];
-
-const templates = [
-  {
-    question: 'Lorem ipsum?',
-    onClick: () => alert('In progress...'),
-  },
-  {
-    question: 'Lorem ipsum?',
-    onClick: () => alert('In progress...'),
-  },
-];
+// Templates for suggestioned questions
+// const templates = [
+//   {
+//     question: 'Lorem ipsum?',
+//     onClick: () => alert('In progress...'),
+//   },
+// ];
 
 export function ChatPage() {
-  const [historic, setHistoric] = React.useState(historicMock);
+  const [tempQuestion, setTempQuestion] = React.useState('');
+  const { deviceId, setDeviceId } = useDeviceId();
+  const { details } = useJobVacancyDescription();
+
+  useDeviceIdQuery({
+    shouldFetchNewId: !deviceId,
+    onSuccess: setDeviceId,
+    onError: alert,
+  });
+
+  const { historic, refetch: refetchHistoric } = useHistoricQuery({
+    deviceId,
+    onSuccess: () => setTempQuestion(''),
+    onError: (error) => {
+      alert(error);
+      setDeviceId(null);
+    },
+  });
+
+  const { sendQuestion } = useQuestionQuery({
+    deviceId,
+    details,
+    onSuccess: refetchHistoric,
+    onError: alert,
+  });
 
   function handleMessage(question) {
-    // TODO - send message to server
-    const mockerdData = 'response';
-    setHistoric([...historic, { question, response: mockerdData }]);
+    setTempQuestion(question);
+    sendQuestion(question);
   }
+
+  const aggregatedHistory = [
+    ...historic,
+    ...(tempQuestion ? [{ question: tempQuestion, response: '...', date: new Date().toISOString() }] : []),
+  ];
 
   return (
     <>
-      <Chat historic={historic} />
-      <SuggestionedQuestions templates={templates} />
+      <Chat historic={aggregatedHistory} />
+      {/* TODO - Validar se iremos colocar */}
+      {/* <SuggestionedQuestions templates={templates} /> */}
       <Input onSubmit={handleMessage} />
     </>
   );

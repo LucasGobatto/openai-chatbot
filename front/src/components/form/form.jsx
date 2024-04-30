@@ -1,22 +1,22 @@
 import { useNavigate } from 'react-router-dom';
+import { useJobVacancyDescription } from '../../hooks';
 import { FormField } from '../form-field';
 import { SubmitButton } from '../submit-button';
 import './styles.css';
 
 export function Form() {
   const navigate = useNavigate();
+  const { setDetails } = useJobVacancyDescription();
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    const cargo = event.target.elements.cargo.value.trim();
-    const descricao = event.target.elements.descricao.value.trim();
-    const valores = event.target.elements.valores.value.trim();
+    const role = event.target.elements.cargo.value.trim();
+    const description = event.target.elements.descricao.value.trim();
+    const values = event.target.elements.valores.value.trim();
 
-    // TODO - salvar numa variavel global para ser reutilizada na pagina do chat
-    console.log({ cargo, descricao, valores });
-
-    if (cargo && descricao) {
+    if (role && description) {
+      setDetails({ role, description, values });
       navigate('/chat');
     } else {
       alert('Preencha todos os campos obrigatórios.');
@@ -25,19 +25,27 @@ export function Form() {
 
   return (
     <form className='home-form' onSubmit={handleSubmit}>
-      <FormField label='Cargo' required placeholder={'Desenvolvedor de Softwares Senior'} name={'cargo'} />
+      <FormField
+        label='Cargo'
+        required
+        placeholder={'Desenvolvedor de Softwares Senior'}
+        name={'cargo'}
+        initialValue={'Desenvolvedor de Softwares Senior'}
+      />
       <FormField
         label='Descrição da vaga'
         required
         placeholder={'Esta é uma descrição para a vaga.'}
         name={'descricao'}
         multiline
+        initialValue={'Esta é uma descrição para a vaga.'}
       />
       <FormField
         label='Valores da empresa'
         placeholder={'Esta é uma descrição dos valores da empresa.'}
         name={'valores'}
         multiline
+        initialValue={'Esta é uma descrição dos valores da empresa.'}
       />
       <SubmitButton />
     </form>
