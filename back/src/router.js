@@ -1,5 +1,6 @@
 import express from 'express';
 import { DatabaseManager } from './db/db.manager.js';
+import { ChatGptService } from './chat-gpt.service.js';
 
 export const router = express.Router();
 
@@ -10,6 +11,8 @@ function jsonSafeParse(obj) {
     return obj;
   }
 }
+
+const chatGptService = new ChatGptService();
 
 router.get('/consultar', (req, res) => {
   DatabaseManager.logs.save({
@@ -30,7 +33,7 @@ router.get('/consultar', (req, res) => {
   return res.json({ data: logsParsed, error: null });
 });
 
-router.post('/messages', (req, res) => {
+router.post('/messages', async (req, res) => {
   const body = req.body;
 
   if (
@@ -39,7 +42,8 @@ router.post('/messages', (req, res) => {
     !body.deviceId ||
     !body.vacancyContext ||
     !body.vacancyContext.role ||
-    !body.vacancyContext.description
+    !body.vacancyContext.description ||
+    !body.contextType
   ) {
     // TODO - poderiamos melhorar a mensagem de erro para avisar qual campo é obrigatório
     DatabaseManager.logs.save({
@@ -67,11 +71,14 @@ router.post('/messages', (req, res) => {
     return res.status(404).json({ data: null, error: 'Dispositivo não encontrado' });
   }
 
+  let messageId;
   try {
-    const { lastInsertRowid: messageId } = DatabaseManager.messages.save({
+    const savedMessage = DatabaseManager.messages.save({
       question: body.question,
       deviceId: device.id,
     });
+
+    messageId = savedMessage.lastInsertRowid;
 
     DatabaseManager.logs.save({
       route: '/messages',
@@ -81,17 +88,14 @@ router.post('/messages', (req, res) => {
       status: 201,
     });
 
-    // TODO - change this to a real GPT call
-    const mockedResponse = 'O sistema ainda não foi integrado com a IA';
+    const response = await chatGptService.sendMessage(body.question, body.vacancyContext, body.contextType);
 
     DatabaseManager.messages.updateResponse({
-      response: mockedResponse,
+      response,
       id: messageId,
     });
 
-    return res
-      .status(200)
-      .json({ data: { response: mockedResponse, question: body.question, date: new Date() }, error: null });
+    return res.status(200).json({ data: { response, question: body.question, date: new Date() }, error: null });
   } catch (error) {
     console.error(error);
     DatabaseManager.logs.save({
@@ -104,8 +108,17 @@ router.post('/messages', (req, res) => {
 
     // The idea here is to return a friendly message to the user
     // simulating a real GPT message
-    const bealtifiedErrorMessage = 'Ops, não consegui obter uma resposta para você. Tente novamente mais tarde';
-    return res.status(200).json({ data: bealtifiedErrorMessage, error: null });
+    const bealtifiedErrorMessage =
+      'Ops, não consegui obter uma resposta para você. Pergunte algo diferente ou tente novamente mais tarde';
+
+    DatabaseManager.messages.updateResponse({
+      response: bealtifiedErrorMessage,
+      id: messageId,
+    });
+
+    return res
+      .status(200)
+      .json({ data: { response: bealtifiedErrorMessage, question: body.question, date: new Date() }, error: null });
   }
 });
 

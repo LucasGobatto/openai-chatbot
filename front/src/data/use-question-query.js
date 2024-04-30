@@ -1,6 +1,9 @@
 import React from 'react';
 import { useHttpRequest } from '../hooks';
 
+// TODO - adicionar o resume se der tempo de fazermos a feature
+const contextType = 'vacancy'; // 'vacancy' | 'resume'
+
 export function useQuestionQuery(params) {
   const [question, setQuestion] = React.useState();
   const [shouldTrigger, setShouldTrigger] = React.useState(false);
@@ -8,8 +11,8 @@ export function useQuestionQuery(params) {
   const { data, error, loading } = useHttpRequest({
     route: '/messages',
     method: 'POST',
-    skip: !shouldTrigger || !question || !params.details || !params.details.hole || !params.details.description,
-    body: { deviceId: params.deviceId, question, vacancyContext: params.details },
+    skip: !shouldTrigger || !question || !params.details || !params.details.role || !params.details.description,
+    body: { deviceId: params.deviceId, question, vacancyContext: params.details, contextType },
     onSuccess: handleSuccess,
     onError: handleError,
   });

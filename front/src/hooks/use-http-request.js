@@ -50,9 +50,12 @@ export function useHttpRequest(params) {
           handleSuccess(data);
         }
       })
-      .catch(handleError)
+      .catch((error) => {
+        console.error(error);
+        onError(error.message);
+      })
       .finally(() => setLoading(false));
-  }, [route, method, body, handleError, handleSuccess]);
+  }, [route, method, body, onError, handleError, handleSuccess]);
 
   React.useEffect(() => {
     if (!skip && !loading) {
