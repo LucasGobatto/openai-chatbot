@@ -1,6 +1,7 @@
 import express from 'express';
 import { DatabaseManager } from './db/db.manager.js';
 import { ChatGptService } from './chat-gpt.service.js';
+import { validateBody } from './helper.js';
 
 export const router = express.Router();
 
@@ -33,11 +34,11 @@ router.get('/consultar', (req, res) => {
   return res.json({ data: logsParsed, error: null });
 });
 
-router.post('/messages/:deviceId', async (req, res) => {
+router.post('/messages/:identifier', async (req, res) => {
   const body = req.body;
   const params = req.params;
 
-  if (!req.params.identifier) {
+  if (!params.identifier) {
     DatabaseManager.logs.save({
       route: '/messages/:identifier',
       method: 'POST',
@@ -49,24 +50,36 @@ router.post('/messages/:deviceId', async (req, res) => {
     return res.status(400).json({ data: null, error: 'Identificador não informado' });
   }
 
-  if (
-    !body ||
-    !body.question ||
-    !body.vacancyContext ||
-    !body.vacancyContext.role ||
-    !body.vacancyContext.description ||
-    !body.contextType
-  ) {
-    // TODO - poderiamos melhorar a mensagem de erro para avisar qual campo é obrigatório
+  const missingFields = validateBody(body);
+
+  if (missingFields.length) {
+    const errorMessage = `Campos obrigatorios não preenchidos: ${missingFields.join(', ')}`;
     DatabaseManager.logs.save({
       route: '/messages',
       method: 'POST',
       input: JSON.stringify(body),
-      error: 'Campos obrigatorios não preenchidos',
+      error: errorMessage,
       status: 400,
     });
 
-    return res.status(400).json({ data: null, error: 'Campos obrigatorios não preenchidos' });
+    return res.status(400).json({ data: null, error: errorMessage });
+  }
+
+  const validContextTypes = ['vacancy', 'resume'];
+
+  if (!validContextTypes.includes(body.contextType)) {
+    const errorMessage = `Tipo de contexto não suportado: "${
+      body.contextType
+    }". Tipos suportados: ${validContextTypes.join(', ')}`;
+    DatabaseManager.logs.save({
+      route: '/messages',
+      method: 'POST',
+      input: JSON.stringify(body),
+      error: errorMessage,
+      status: 400,
+    });
+
+    return res.status(400).json({ data: null, error: errorMessage });
   }
 
   const device = DatabaseManager.devices.findByIdentifier(params.identifier);
