@@ -33,13 +33,25 @@ router.get('/consultar', (req, res) => {
   return res.json({ data: logsParsed, error: null });
 });
 
-router.post('/messages', async (req, res) => {
+router.post('/messages/:deviceId', async (req, res) => {
   const body = req.body;
+  const params = req.params;
+
+  if (!req.params.identifier) {
+    DatabaseManager.logs.save({
+      route: '/messages/:identifier',
+      method: 'POST',
+      input: JSON.stringify(req.body),
+      error: 'Identificador não informado',
+      status: 400,
+    });
+
+    return res.status(400).json({ data: null, error: 'Identificador não informado' });
+  }
 
   if (
     !body ||
     !body.question ||
-    !body.deviceId ||
     !body.vacancyContext ||
     !body.vacancyContext.role ||
     !body.vacancyContext.description ||
@@ -57,7 +69,7 @@ router.post('/messages', async (req, res) => {
     return res.status(400).json({ data: null, error: 'Campos obrigatorios não preenchidos' });
   }
 
-  const device = DatabaseManager.devices.findByIdentifier(body.deviceId);
+  const device = DatabaseManager.devices.findByIdentifier(params.identifier);
 
   if (!device) {
     DatabaseManager.logs.save({
@@ -149,29 +161,29 @@ router.post('/device-id', (_req, res) => {
   }
 });
 
-router.get('/messages/:deviceId', (req, res) => {
-  const { deviceId } = req.params;
+router.get('/messages/:identifier', (req, res) => {
+  const { identifier } = req.params;
 
-  if (!deviceId) {
+  if (!identifier) {
     DatabaseManager.logs.save({
-      route: '/messages/:deviceId',
+      route: '/messages/:identifier',
       method: 'GET',
       input: JSON.stringify(req.params),
-      error: 'DeviceId não informado',
+      error: 'Identificador não informado',
       status: 400,
     });
 
-    return res.status(400).json({ data: null, error: 'DeviceId não informado' });
+    return res.status(400).json({ data: null, error: 'Identificador não informado' });
   }
 
-  const device = DatabaseManager.devices.findByIdentifier(deviceId);
+  const device = DatabaseManager.devices.findByIdentifier(identifier);
 
   if (!device) {
     DatabaseManager.logs.save({
-      route: '/messages/:deviceId',
+      route: '/messages/:identifier',
       method: 'GET',
       input: JSON.stringify(req.params),
-      error: 'Device não encontrado',
+      error: 'Dispositivo não encontrado',
       status: 404,
     });
 
@@ -181,7 +193,7 @@ router.get('/messages/:deviceId', (req, res) => {
   const messages = DatabaseManager.messages.findManyByDeviceId(device.id);
 
   DatabaseManager.logs.save({
-    route: '/messages/:deviceId',
+    route: '/messages/:identifier',
     method: 'GET',
     input: JSON.stringify(req.params),
     error: null,
