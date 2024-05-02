@@ -3,37 +3,32 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-if (!process.env.OPENAI_API_KEY || !process.env.OPENAI_ORGANIZATION_ID) {
+if (!process.env.OPENAI_API_KEY) {
   console.error('OpenAI secrets are required as environment variables');
   process.exit(1);
 }
 
 export class ChatGptService {
   constructor() {
-    this.api = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-      organization: process.env.OPENAI_ORGANIZATION_ID,
-    });
+    this.api = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   }
 
   async sendMessage(message, context, contextType) {
     const temperatureThreashold = 0.7;
 
-    const response = await this.api.completions.create({
+    const response = await this.api.chat.completions.create({
       messages: [
         { role: 'system', content: this._generateContext(contextType, context) },
         { role: 'user', content: message },
       ],
-      model: 'gpt-3.5-turbo-instruct',
+      model: 'gpt-3.5-turbo',
       temperature: temperatureThreashold,
     });
 
     const bealtifiedErrorMessage =
       'Ops, não consegui obter uma resposta para você. Pergunte algo diferente ou tente novamente mais tarde';
 
-    // TODO - validar se esse formato é o correto!
-    // referência: https://beta.openai.com/docs/api-reference/completions/create
-    return response.data.choices[0] ? response.data.choices[0].text : bealtifiedErrorMessage;
+    return response.choices[0] ? response.choices[0].message.content : bealtifiedErrorMessage;
   }
 
   _generateContext(type, context) {
