@@ -1,6 +1,7 @@
 import express from 'express';
 import { DatabaseManager } from './db/db.manager.js';
 import { ChatGptService } from './chat-gpt.service.js';
+import { validateBody } from './helper.js';
 
 export const router = express.Router();
 
@@ -33,31 +34,55 @@ router.get('/consultar', (req, res) => {
   return res.json({ data: logsParsed, error: null });
 });
 
-router.post('/messages', async (req, res) => {
+router.post('/messages/:identifier', async (req, res) => {
   const body = req.body;
+  const params = req.params;
 
-  if (
-    !body ||
-    !body.question ||
-    !body.deviceId ||
-    !body.vacancyContext ||
-    !body.vacancyContext.role ||
-    !body.vacancyContext.description ||
-    !body.contextType
-  ) {
-    // TODO - poderiamos melhorar a mensagem de erro para avisar qual campo é obrigatório
+  if (!params.identifier) {
+    DatabaseManager.logs.save({
+      route: '/messages/:identifier',
+      method: 'POST',
+      input: JSON.stringify(req.body),
+      error: 'Identificador não informado',
+      status: 400,
+    });
+
+    return res.status(400).json({ data: null, error: 'Identificador não informado' });
+  }
+
+  const missingFields = validateBody(body);
+
+  if (missingFields.length) {
+    const errorMessage = `Campos obrigatorios não preenchidos: ${missingFields.join(', ')}`;
     DatabaseManager.logs.save({
       route: '/messages',
       method: 'POST',
       input: JSON.stringify(body),
-      error: 'Campos obrigatorios não preenchidos',
+      error: errorMessage,
       status: 400,
     });
 
-    return res.status(400).json({ data: null, error: 'Campos obrigatorios não preenchidos' });
+    return res.status(400).json({ data: null, error: errorMessage });
   }
 
-  const device = DatabaseManager.devices.findByIdentifier(body.deviceId);
+  const validContextTypes = ['vacancy', 'resume'];
+
+  if (!validContextTypes.includes(body.contextType)) {
+    const errorMessage = `Tipo de contexto não suportado: "${
+      body.contextType
+    }". Tipos suportados: ${validContextTypes.join(', ')}`;
+    DatabaseManager.logs.save({
+      route: '/messages',
+      method: 'POST',
+      input: JSON.stringify(body),
+      error: errorMessage,
+      status: 400,
+    });
+
+    return res.status(400).json({ data: null, error: errorMessage });
+  }
+
+  const device = DatabaseManager.devices.findByIdentifier(params.identifier);
 
   if (!device) {
     DatabaseManager.logs.save({
@@ -149,29 +174,29 @@ router.post('/device-id', (_req, res) => {
   }
 });
 
-router.get('/messages/:deviceId', (req, res) => {
-  const { deviceId } = req.params;
+router.get('/messages/:identifier', (req, res) => {
+  const { identifier } = req.params;
 
-  if (!deviceId) {
+  if (!identifier) {
     DatabaseManager.logs.save({
-      route: '/messages/:deviceId',
+      route: '/messages/:identifier',
       method: 'GET',
       input: JSON.stringify(req.params),
-      error: 'DeviceId não informado',
+      error: 'Identificador não informado',
       status: 400,
     });
 
-    return res.status(400).json({ data: null, error: 'DeviceId não informado' });
+    return res.status(400).json({ data: null, error: 'Identificador não informado' });
   }
 
-  const device = DatabaseManager.devices.findByIdentifier(deviceId);
+  const device = DatabaseManager.devices.findByIdentifier(identifier);
 
   if (!device) {
     DatabaseManager.logs.save({
-      route: '/messages/:deviceId',
+      route: '/messages/:identifier',
       method: 'GET',
       input: JSON.stringify(req.params),
-      error: 'Device não encontrado',
+      error: 'Dispositivo não encontrado',
       status: 404,
     });
 
@@ -181,7 +206,7 @@ router.get('/messages/:deviceId', (req, res) => {
   const messages = DatabaseManager.messages.findManyByDeviceId(device.id);
 
   DatabaseManager.logs.save({
-    route: '/messages/:deviceId',
+    route: '/messages/:identifier',
     method: 'GET',
     input: JSON.stringify(req.params),
     error: null,
