@@ -9,10 +9,10 @@ export function useQuestionQuery(params) {
   const [shouldTrigger, setShouldTrigger] = React.useState(false);
 
   const { data, error, loading } = useHttpRequest({
-    route: '/messages',
+    route: `/messages/${params.deviceId}`,
     method: 'POST',
     skip: !shouldTrigger || !question || !params.details || !params.details.role || !params.details.description,
-    body: { deviceId: params.deviceId, question, vacancyContext: params.details, contextType },
+    body: { question, vacancyContext: params.details, contextType },
     onSuccess: handleSuccess,
     onError: handleError,
   });
