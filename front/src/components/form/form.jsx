@@ -25,27 +25,19 @@ export function Form() {
 
   return (
     <form className='home-form' onSubmit={handleSubmit}>
-      <FormField
-        label='Cargo'
-        required
-        placeholder={'Desenvolvedor de Softwares Senior'}
-        name={'cargo'}
-        initialValue={'Desenvolvedor de Softwares Senior'}
-      />
+      <FormField label='Cargo' required placeholder={'Desenvolvedor de Softwares Senior'} name={'cargo'} />
       <FormField
         label='Descrição da vaga'
         required
         placeholder={'Esta é uma descrição para a vaga.'}
         name={'descricao'}
         multiline
-        initialValue={'Esta é uma descrição para a vaga.'}
       />
       <FormField
         label='Valores da empresa'
         placeholder={'Esta é uma descrição dos valores da empresa.'}
         name={'valores'}
         multiline
-        initialValue={'Esta é uma descrição dos valores da empresa.'}
       />
       <SubmitButton />
     </form>
