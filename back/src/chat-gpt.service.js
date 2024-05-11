@@ -14,7 +14,7 @@ export class ChatGptService {
   }
 
   async sendMessage(message, context, contextType) {
-    const temperatureThreashold = 0.7;
+    const temperatureThreashold = 0.5;
 
     const response = await this.api.chat.completions.create({
       messages: [
@@ -46,10 +46,19 @@ export class ChatGptService {
           A resposta deve ser dada em formato de texto em português brasiliero.
         `;
       case 'resume':
-        // TODO - validar se iremos fazer essa parte
-        return 'Aqui vai o prompt para currículos';
+        return `
+          Você é um assistente virtual para a área de recursos humanos
+          e sua tarefa será analisar, com base na descrição de uma vaga 
+          de emprego, um curriculo de candidato com base no que é perguntado.
+          A vaga é a seguinte:
+          Cargo: ${context.role}
+          Descrição: ${context.description}
+          Valores da Empresa: ${context.values || 'Não informado'}
+          O currículo é o seguinte: ${context.resume}
+          A resposta deve ser dada em formato de texto em português brasiliero.
+        `;
       default:
-        return '';
+        throw new Error(`contextType inválido - ${type}`);
     }
   }
 }
