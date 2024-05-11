@@ -17,5 +17,9 @@ export function validateBody(body) {
     missingFields.push('contextType');
   }
 
+  if (!body || (body.contextType === 'resume' && !body.vacancyContext.resume)) {
+    missingFields.push('vacancyContext.resume');
+  }
+
   return missingFields;
 }
