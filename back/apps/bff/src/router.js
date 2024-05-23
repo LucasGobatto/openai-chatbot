@@ -15,6 +15,12 @@ function jsonSafeParse(obj) {
 
 const chatGptService = new ChatGptService();
 
+router.post('/eventos', (req, res) => {
+  console.log('Evento recebido:', JSON.stringify(req.body));
+
+  res.status(200).send({ success: true });
+});
+
 router.get('/consultar', (req, res) => {
   DatabaseManager.logs.save({
     route: '/consultar',
