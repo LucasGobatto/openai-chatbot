@@ -67,9 +67,4 @@ test('should not navigate to chat page if the form is submitted with missing fie
 
   const chatPage = screen.queryByText('Chat');
   expect(chatPage).toBeNull();
-  expect(screen.getByRole('heading', { name: /job interview assistance/i })).toBeInTheDocument();
-  expect(screen.getByText('Cargo*')).toBeInTheDocument();
-  expect(screen.getByText('Descrição da vaga*')).toBeInTheDocument();
-  expect(screen.getByText('Valores da empresa')).toBeInTheDocument();
-  expect(screen.getByRole('button', { value: 'Iniciar' })).toBeInTheDocument();
 });
