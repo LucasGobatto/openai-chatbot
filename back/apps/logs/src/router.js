@@ -3,35 +3,24 @@ import { DatabaseManager } from './db/db.manager.js';
 
 export const router = express.Router();
 
-function jsonSafeParse(obj) {
-  try {
-    return JSON.parse(obj);
-  } catch {
-    return obj;
-  }
-}
-
 router.post('/eventos', (req, res) => {
-  console.log('Evento recebido:', jsonSafeParse(req.body));
+  console.log('Evento recebido:', JSON.stringify(req.body));
 
-  res.status(200).send({ success: true });
-});
+  // ignorando eventos que não pertencem a esse serviço
+  if (req.body.tipo !== 'LOG_CRIADO') {
+    return res.status(200).send({ success: true });
+  }
 
-router.get('/consultar', (req, res) => {
+  const { service, route, method, input, message, status } = req.body.dados;
+
   DatabaseManager.logs.save({
-    route: '/consultar',
-    method: 'GET',
-    input: jsonSafeParse(req.body),
-    error: null,
-    status: 200,
+    service,
+    route,
+    method,
+    input,
+    message,
+    status,
   });
 
-  const logs = DatabaseManager.logs.findAll();
-
-  const logsParsed = logs.map((log) => ({
-    ...log,
-    input: jsonSafeParse(log.input),
-  }));
-
-  return res.json({ data: logsParsed, error: null });
+  return res.json({ success: true });
 });

@@ -1,18 +1,14 @@
 import { db } from './config.js';
 
 export class LogsManager {
-  static save({ createdAt, route, method, input, error, status }) {
+  static save({ service, route, method, input, message, status }) {
     const insert = db.prepare(
       `
-      INSERT INTO logs (created_at, route, method, input, error, status)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO logs (service, route, method, input, message, status, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `,
     );
 
-    return insert.run(createdAt ?? new Date().toISOString(), route, method, input, error, status);
-  }
-
-  static findAll() {
-    return db.prepare('SELECT * FROM logs ORDER BY id DESC').all();
+    return insert.run(service, route, method, input, message, status, new Date().toISOString());
   }
 }

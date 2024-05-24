@@ -12,8 +12,9 @@ db.prepare(
       status INTEGER,
       route TEXT,
       method TEXT,
-      input TEXT,
-      error TEXT NULL
+      service TEXT,
+      input TEXT NULL,
+      message TEXT NULL
     )
 `,
 ).run();
