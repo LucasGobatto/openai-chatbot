@@ -38,7 +38,7 @@ router.post('/messages/:identifier', async (req, res) => {
     baseLogEvent.dados.status = 400;
     baseLogEvent.dados.message = errorMessage;
 
-    await errorMessage(baseLogEvent);
+    await sendEvent(baseLogEvent);
 
     return res.status(400).json({ data: null, error: errorMessage });
   }
@@ -52,7 +52,7 @@ router.post('/messages/:identifier', async (req, res) => {
     baseLogEvent.dados.status = 400;
     baseLogEvent.dados.message = errorMessage;
 
-    await errorMessage(baseLogEvent);
+    await sendEvent(baseLogEvent);
 
     return res.status(400).json({ data: null, error: errorMessage });
   }
@@ -64,7 +64,7 @@ router.post('/messages/:identifier', async (req, res) => {
     baseLogEvent.dados.status = 404;
     baseLogEvent.dados.message = errorMessage;
 
-    await errorMessage(baseLogEvent);
+    await sendEvent(baseLogEvent);
 
     return res.status(404).json({ data: null, error: errorMessage });
   }
@@ -113,7 +113,7 @@ router.post('/messages/:identifier', async (req, res) => {
     baseLogEvent.dados.status = 500;
     baseLogEvent.dados.message = error.message;
 
-    await errorMessage(baseLogEvent);
+    await sendEvent(baseLogEvent);
 
     // The idea here is to return a friendly message to the user
     // simulating a real GPT message
