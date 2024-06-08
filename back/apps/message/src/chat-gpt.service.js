@@ -28,7 +28,15 @@ export class ChatGptService {
     const bealtifiedErrorMessage =
       'Ops, não consegui obter uma resposta para você. Pergunte algo diferente ou tente novamente mais tarde';
 
-    return response.choices[0] ? response.choices[0].message.content : bealtifiedErrorMessage;
+    return {
+      tokens: {
+        total: response.usage ? response.usage.total_tokens : 0,
+        prompt: response.usage ? response.usage.prompt_tokens : 0,
+        response: response.usage ? response.usage.completion_tokens : 0,
+      },
+
+      message: response.choices[0] ? response.choices[0].message.content : bealtifiedErrorMessage,
+    };
   }
 
   _generateContext(type, context) {

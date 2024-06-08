@@ -88,7 +88,9 @@ router.post('/messages/:identifier', async (req, res) => {
       tipo: 'CONSULTA_CRIADA',
       dados: {
         timeSpent,
-        response,
+        userIdentifier: params.identifier,
+        tokens: response.tokens,
+        response: response.message,
         question: body.question,
         contextType: body.contextType,
         role: body.vacancyContext.role,
@@ -99,7 +101,7 @@ router.post('/messages/:identifier', async (req, res) => {
     });
 
     DatabaseManager.messages.updateResponse({
-      response,
+      response: response.message,
       id: messageId,
     });
 
@@ -107,7 +109,14 @@ router.post('/messages/:identifier', async (req, res) => {
     baseLogEvent.dados.message = null;
     await sendEvent(baseLogEvent);
 
-    return res.status(200).json({ data: { response, question: body.question, date: new Date() }, error: null });
+    return res.status(200).json({
+      data: {
+        response: response.message,
+        question: body.question,
+        date: new Date(),
+      },
+      error: null,
+    });
   } catch (error) {
     console.error(error);
     baseLogEvent.dados.status = 500;
@@ -125,9 +134,14 @@ router.post('/messages/:identifier', async (req, res) => {
       id: messageId,
     });
 
-    return res
-      .status(200)
-      .json({ data: { response: bealtifiedErrorMessage, question: body.question, date: new Date() }, error: null });
+    return res.status(200).json({
+      data: {
+        response: bealtifiedErrorMessage,
+        question: body.question,
+        date: new Date(),
+      },
+      error: null,
+    });
   }
 });
 

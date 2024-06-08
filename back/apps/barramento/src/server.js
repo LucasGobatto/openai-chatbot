@@ -22,6 +22,8 @@ app.post('/eventos', async (req, res) => {
   axios({ url: 'http://localhost:3000/eventos', method: 'post', data: req.body });
   // request para o micro-serviço de logs
   axios({ url: 'http://localhost:4000/eventos', method: 'post', data: req.body });
+  // request para o micro-serviço de relatório estatístico
+  axios({ url: 'http://localhost:5000/eventos', method: 'post', data: req.body });
 
   res.status(200).json({ success: true });
 });
