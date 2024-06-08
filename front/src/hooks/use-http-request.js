@@ -32,7 +32,7 @@ export function useHttpRequest(params) {
 
   const triggerRequest = useCallback(() => {
     setLoading(true);
-    const baseUrl = 'http://localhost:3000';
+    const baseUrl = import.meta.VITE_BASE_URL;
     const url = `${baseUrl}${route}`;
 
     fetch(url, {

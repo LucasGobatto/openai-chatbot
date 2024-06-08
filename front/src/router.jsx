@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { RouteGuard } from './guard';
-import { ChatPage, HomePage } from './pages';
+import { ChatPage, HomePage, ReportsPage } from './pages';
 import { DeviceIdProvider } from './providers';
 
 export const router = createBrowserRouter([
@@ -17,5 +17,9 @@ export const router = createBrowserRouter([
         </DeviceIdProvider>
       </RouteGuard>
     ),
+  },
+  {
+    path: '/reports',
+    element: <ReportsPage />,
   },
 ]);
