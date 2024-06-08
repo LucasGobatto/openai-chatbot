@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
 export function useHttpRequest(params) {
-  const { route, method, body, skip, onSuccess, onError } = params;
+  const { route, method, body, skip, onSuccess, onError, baseUrl } = params;
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
@@ -32,7 +32,6 @@ export function useHttpRequest(params) {
 
   const triggerRequest = useCallback(() => {
     setLoading(true);
-    const baseUrl = import.meta.VITE_BASE_URL;
     const url = `${baseUrl}${route}`;
 
     fetch(url, {
@@ -55,7 +54,7 @@ export function useHttpRequest(params) {
         onError(error.message);
       })
       .finally(() => setLoading(false));
-  }, [route, method, body, onError, handleError, handleSuccess]);
+  }, [route, method, baseUrl, body, onError, handleError, handleSuccess]);
 
   React.useEffect(() => {
     if (!skip && !loading) {
@@ -64,9 +63,9 @@ export function useHttpRequest(params) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip]);
 
-  function refetch() {
+  const refetch = React.useCallback(() => {
     triggerRequest();
-  }
+  }, [triggerRequest]);
 
   return { data, error, loading, refetch };
 }

@@ -7,6 +7,7 @@ export function useHistoricQuery({ deviceId, onSuccess, onError }) {
   const [historic, setHistoric] = React.useState([]);
 
   const { error, loading, refetch } = useHttpRequest({
+    baseUrl: import.meta.env.VITE_MESSAGE_BASE_URL,
     route: `/messages/${deviceId}`,
     method: 'GET',
     skip: !deviceId || historic.length > 0,

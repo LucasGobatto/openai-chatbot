@@ -1,0 +1,5 @@
+.container {
+  padding-inline: 32px;
+  padding-block: 24px;
+  overflow-y: auto;
+}

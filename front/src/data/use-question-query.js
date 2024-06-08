@@ -9,6 +9,7 @@ export function useQuestionQuery(params) {
   const [shouldTrigger, setShouldTrigger] = React.useState(false);
 
   const { data, error, loading } = useHttpRequest({
+    baseUrl: import.meta.env.VITE_MESSAGE_BASE_URL,
     route: `/messages/${params.deviceId}`,
     method: 'POST',
     skip: !shouldTrigger || !question || !params.details || !params.details.role || !params.details.description,
