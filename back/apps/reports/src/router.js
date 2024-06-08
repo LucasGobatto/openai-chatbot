@@ -33,6 +33,8 @@ router.post('/eventos', (req, res) => {
 });
 
 router.get('/stats', async (req, res) => {
+  const { month, year } = req.query;
+
   const baseLogEvent = {
     tipo: 'LOG_CRIADO',
     dados: {
@@ -45,21 +47,9 @@ router.get('/stats', async (req, res) => {
 
   try {
     const overall = DatabaseManager.stats.findOverallStats();
-    const groupedByMonth = DatabaseManager.stats.findMonthAverageStats();
-    const topFiveUsers = DatabaseManager.stats.findTopUsers();
-    const overallConsultedDays = DatabaseManager.stats.findOverallConsultedDays();
-
-    const topFiveGroupedByMonth = topFiveUsers.reduce((agg, curr) => {
-      // coloca no máximo 5 usuários na lista
-      if (agg[curr.month] && agg[curr.month].length < 5) {
-        agg[curr.month].push(curr);
-        agg[curr.month].sort((a, b) => b.totalTimeSpent - a.totalTimeSpent);
-      } else {
-        agg[curr.month] = [curr];
-      }
-
-      return agg;
-    }, {});
+    const groupedByMonth = DatabaseManager.stats.findMonthAverageStats({ month, year });
+    const topFiveUsers = DatabaseManager.stats.findTopUsers({ month, year });
+    const overallConsultedDays = DatabaseManager.stats.findOverallConsultedDays({ month, year });
 
     baseLogEvent.dados.status = 200;
     baseLogEvent.dados.message = null;
@@ -70,7 +60,7 @@ router.get('/stats', async (req, res) => {
         overall,
         groupedByMonth,
         overallConsultedDays,
-        topFiveUsers: topFiveGroupedByMonth,
+        topFiveUsers,
       },
       error: null,
     });

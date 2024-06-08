@@ -31,7 +31,7 @@ export class StatsManager {
       .get();
   }
 
-  static findMonthAverageStats() {
+  static findMonthAverageStats({ month, year }) {
     return db
       .prepare(
         `
@@ -53,13 +53,13 @@ export class StatsManager {
         MIN(prompt_tokens) AS minPromptTokens,
         AVG(prompt_tokens) AS avgPromptTokens
       FROM stats
-      GROUP BY month;
+      WHERE "month" LIKE '${year}-%${month}'
     `,
       )
-      .all();
+      .get();
   }
 
-  static findTopUsers() {
+  static findTopUsers({ month, year }) {
     return db
       .prepare(
         `
@@ -69,6 +69,7 @@ export class StatsManager {
             SUM(time_spent) as totalTimeSpent,
             COUNT(user_identifier) as totalCalls
           FROM stats
+          WHERE "month" LIKE '${year}-%${month}'
           GROUP BY user_identifier, "month"
           ORDER BY "month" ASC, 
             totalTimeSpent DESC, 
@@ -78,15 +79,17 @@ export class StatsManager {
       .all();
   }
 
-  static findOverallConsultedDays() {
+  static findOverallConsultedDays({ month, year }) {
     const topFiveMostConsultedDays = db
       .prepare(
         `
         SELECT 
-          user_identifier,
-          total_tokens,
-          created_at
+          user_identifier as userIdentifier,
+          total_tokens as totalTokens,
+          strftime('%Y-%m', created_at) AS "month",
+          created_at as createdAt
         FROM stats
+        WHERE "month" LIKE '${year}-%${month}'
         ORDER BY total_tokens DESC
         LIMIT 5
         `,
@@ -97,10 +100,12 @@ export class StatsManager {
       .prepare(
         `
         SELECT 
-          user_identifier,
-          total_tokens,
-          created_at
+          user_identifier as userIdentifier,
+          total_tokens as totalTokens,
+          strftime('%Y-%m', created_at) AS "month",
+          created_at as createdAt
         FROM stats
+        WHERE "month" LIKE '${year}-%${month}'
         ORDER BY total_tokens ASC
         LIMIT 5
         `,

@@ -7,7 +7,7 @@ export function ReportsPage() {
   const [month, setMonth] = React.useState(new Date().getMonth());
   const [year, setYear] = React.useState(new Date().getFullYear());
 
-  const { data, loading, error, refetch } = useReportStatsQuery({ body: { month, year } });
+  const { data, loading, error, refetch } = useReportStatsQuery({ body: { month: month + 1, year } });
 
   const handleMonthChange = (e) => {
     const selectedMonth = months.findIndex((elem) => elem === e.target.value);
@@ -54,8 +54,8 @@ export function ReportsPage() {
       {data && (
         <>
           <OverallStats {...data.overall} />
-          <MonthlyStats monthStats={data.groupedByMonth[0]} />
-          <TopUsers topFiveUsers={data.topFiveUsers['2024-05']} />
+          <MonthlyStats monthStats={data.groupedByMonth} />
+          <TopUsers topFiveUsers={data.topFiveUsers} />
           <DailyStats overallConsultedDays={data.overallConsultedDays} />
         </>
       )}
