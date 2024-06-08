@@ -5,6 +5,111 @@ export class StatsManager {
     return db.prepare('SELECT * FROM stats ORDER BY id DESC').all();
   }
 
+  static findOverallStats() {
+    return db
+      .prepare(
+        `
+        SELECT 
+          MAX(total_tokens) AS maxTotalTokens, 
+          MIN(total_tokens) AS minTotalTokens, 
+          AVG(total_tokens) AS avgTotalTokens, 
+          
+          MAX(time_spent) AS maxTimeSpent,
+          MIN(time_spent) AS minTimeSpent,
+          AVG(time_spent) AS avgTimeSpent,
+          
+          MAX(response_tokens) AS maxResponseTokens, 
+          MIN(response_tokens) AS minResponseTokens, 
+          AVG(response_tokens) AS avgResponseTokens, 
+          
+          MAX(prompt_tokens) AS maxPromptTokens,
+          MIN(prompt_tokens) AS minPromptTokens,
+          AVG(prompt_tokens) AS avgPromptTokens
+        FROM stats
+      `,
+      )
+      .get();
+  }
+
+  static findMonthAverageStats() {
+    return db
+      .prepare(
+        `
+      SELECT 
+        strftime('%Y-%m', created_at) AS month,
+        MAX(total_tokens) AS maxTotalTokens, 
+        MIN(total_tokens) AS minTotalTokens, 
+        AVG(total_tokens) AS avgTotalTokens, 
+        
+        MAX(time_spent) AS maxTimeSpent,
+        MIN(time_spent) AS minTimeSpent,
+        AVG(time_spent) AS avgTimeSpent,
+        
+        MAX(response_tokens) AS maxResponseTokens, 
+        MIN(response_tokens) AS minResponseTokens, 
+        AVG(response_tokens) AS avgResponseTokens, 
+        
+        MAX(prompt_tokens) AS maxPromptTokens,
+        MIN(prompt_tokens) AS minPromptTokens,
+        AVG(prompt_tokens) AS avgPromptTokens
+      FROM stats
+      GROUP BY month;
+    `,
+      )
+      .all();
+  }
+
+  static findTopUsers() {
+    return db
+      .prepare(
+        `
+          SELECT
+            user_identifier as "user",
+            strftime('%Y-%m', created_at) AS "month",
+            SUM(time_spent) as totalTimeSpent,
+            COUNT(user_identifier) as totalCalls
+          FROM stats
+          GROUP BY user_identifier, "month"
+          ORDER BY "month" ASC, 
+            totalTimeSpent DESC, 
+            totalCalls DESC
+      `,
+      )
+      .all();
+  }
+
+  static findOverallConsultedDays() {
+    const topFiveMostConsultedDays = db
+      .prepare(
+        `
+        SELECT 
+          user_identifier,
+          total_tokens,
+          created_at
+        FROM stats
+        ORDER BY total_tokens DESC
+        LIMIT 5
+        `,
+      )
+      .all();
+
+    const topFiveLessConsultedDays = db
+      .prepare(
+        `
+        SELECT 
+          user_identifier,
+          total_tokens,
+          created_at
+        FROM stats
+        ORDER BY total_tokens ASC
+        LIMIT 5
+        `,
+      )
+      .all();
+
+    return [...topFiveMostConsultedDays, ...topFiveLessConsultedDays.reverse()];
+  }
+
   static save({
     userIdentifier,
     timeSpent,
