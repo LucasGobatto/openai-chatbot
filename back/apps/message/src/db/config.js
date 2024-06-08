@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3';
 import path from 'node:path';
 
 // creates an database instance in file `database.db`
-export const db = sqlite(path.join(process.cwd(), './database.db'));
+export const db = sqlite(path.join(process.cwd(), './messages.db'));
 
 db.prepare(
   `
