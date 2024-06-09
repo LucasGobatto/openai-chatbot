@@ -1,0 +1,32 @@
+.container {
+  padding-inline: 32px;
+  padding-block: 24px;
+  overflow-y: auto;
+}
+
+.selectors {
+  display: flex;
+  gap: 10px;
+}
+
+.selectors select {
+  padding: 8px 12px;
+  border: 1px solid #d0d7e4;
+  border-radius: 4px;
+  background-color: #181f2c;
+  font-size: 16px;
+  color: #d0d7e4;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.selectors select:hover {
+  border-color: #888;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.selectors select:focus {
+  outline: none;
+  border-color: #555;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}

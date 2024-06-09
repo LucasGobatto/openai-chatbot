@@ -26,6 +26,8 @@ span,
 button,
 pre,
 textarea,
+td,
+th,
 ::placeholder {
   font-family: 'Inter', sans-serif;
   color: #d0d7e4;
