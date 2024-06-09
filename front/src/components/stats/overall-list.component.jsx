@@ -4,7 +4,7 @@ import './styles.css';
 export function OverallStats(props) {
   return (
     <div className='card'>
-      <h2>Estatíticas Gerais</h2>
+      <h2>Estatísticas Gerais</h2>
       <div className='card-container'>
         <div className='card-content'>
           <h3>Total de Tokens Gasto</h3>

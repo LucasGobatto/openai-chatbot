@@ -23,7 +23,7 @@ export function DailyStats({ overallConsultedDays }) {
               <tr key={user.user + 'max'}>
                 <td>{user.userIdentifier}</td>
                 <td>{user.totalTokens}</td>
-                <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                <td>{new Date(user.createdAt).toLocaleDateString('pt-br')}</td>
               </tr>
             ))}
           </tbody>
@@ -48,7 +48,7 @@ export function DailyStats({ overallConsultedDays }) {
               <tr key={user.user + 'min'}>
                 <td>{user.userIdentifier}</td>
                 <td>{user.totalTokens}</td>
-                <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                <td>{new Date(user.createdAt).toLocaleDateString('pt-br')}</td>
               </tr>
             ))}
           </tbody>

@@ -26,10 +26,8 @@ export function ReportsPage() {
   return (
     <div className='container'>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h1>
-          Estatísticas de {months[month]}/{year}
-        </h1>
-        <div>
+        <h1>Relatório</h1>
+        <div className='selectors'>
           <select onChange={handleMonthChange} defaultValue={months[month]}>
             {months.map((month) => (
               <option key={month} id={month}>
