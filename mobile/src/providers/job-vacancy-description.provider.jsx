@@ -20,7 +20,7 @@ export const JobVacancyDescriptionContext = React.createContext({
 
 export const JobVacancyDescriptionProvider = (props) => {
   const { set, get } = useLocalStorage('job-vacancy-description');
-  const [details, setDetails] = React.useState();
+  const [details, setDetails] = React.useState({});
 
   const updateDetails = React.useCallback(
     async (newDetails) => {
@@ -34,7 +34,7 @@ export const JobVacancyDescriptionProvider = (props) => {
     async function getFromLocalStorage() {
       const cache = await get();
 
-      setDetails(cache);
+      setDetails(cache ?? {});
     }
 
     getFromLocalStorage();

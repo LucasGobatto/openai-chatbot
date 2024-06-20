@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocalStorage } from '../hooks';
+import { useLocalStorage } from '../hooks/use-local-storage';
 
 /**
  * interface DeviceId {
