@@ -18,7 +18,6 @@ const port = process.env.PORT || 10000;
 app.post('/eventos', async (req, res) => {
   try {
     console.log('Novo evento recebido:', JSON.stringify(req.body));
-
     // request para o micro-serviço de mensagens
     axios({ url: 'http://localhost:3000/eventos', method: 'post', data: req.body });
     // request para o micro-serviço de logs

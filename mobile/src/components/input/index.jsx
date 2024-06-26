@@ -45,12 +45,12 @@ const styles = StyleSheet.create({
   },
 
   questionInput: {
+    flex: 1,
     maxHeight: 80,
     height: 50,
     paddingHorizontal: 8,
     paddingVertical: 4,
     backgroundColor: '#272F3E',
-    width: '100%',
     fontSize: 14,
     borderRadius: 5,
     color: '#D0D7E4',
@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
   sendButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'end',
     height: 50,
     width: 50,
     borderRadius: 25,

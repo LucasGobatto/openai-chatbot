@@ -20,9 +20,7 @@ export const DeviceIdContext = React.createContext({
 
 export const DeviceIdProvider = (props) => {
   const { set, get } = useLocalStorage('device-id');
-  const cache = get();
-
-  const [deviceId, setDeviceId] = React.useState(cache);
+  const [deviceId, setDeviceId] = React.useState('48708fba-6320-4548-8cdc-46039bb71bcf');
 
   const updateDeviceId = React.useCallback(
     async (newDeviceId) => {
@@ -36,7 +34,9 @@ export const DeviceIdProvider = (props) => {
     async function getFromLocalStorage() {
       const cache = await get();
 
-      setDeviceId(cache);
+      if (cache) {
+        setDeviceId(cache);
+      }
     }
 
     getFromLocalStorage();

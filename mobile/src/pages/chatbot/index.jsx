@@ -8,7 +8,6 @@ const PageState = { Form: 1, Chat: 2 };
 
 export const Chatbot = (props) => {
   const [pageState, setPageState] = React.useState(PageState.Form);
-  console.log(pageState);
 
   const handleBack = () => {
     if (pageState === PageState.Chat) {
