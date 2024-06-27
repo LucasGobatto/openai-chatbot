@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocalStorage } from '../hooks';
+import { useLocalStorage } from '../hooks/use-local-storage';
 
 /**
  * interface JobVacancyDescription {
@@ -20,7 +20,11 @@ export const JobVacancyDescriptionContext = React.createContext({
 
 export const JobVacancyDescriptionProvider = (props) => {
   const { set, get } = useLocalStorage('job-vacancy-description');
-  const [details, setDetails] = React.useState({});
+  const [details, setDetails] = React.useState({
+    role: 'Desenvolvedor de Softwares Sênior',
+    description: 'Procura-se desenvolvedor de softwares que tenha experiência com linguagens nativas.',
+    values: null,
+  });
 
   const updateDetails = React.useCallback(
     async (newDetails) => {
@@ -34,7 +38,9 @@ export const JobVacancyDescriptionProvider = (props) => {
     async function getFromLocalStorage() {
       const cache = await get();
 
-      setDetails(cache ?? {});
+      if (cache) {
+        setDetails(cache);
+      }
     }
 
     getFromLocalStorage();

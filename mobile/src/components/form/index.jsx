@@ -14,7 +14,7 @@ import { useJobVacancyDescription } from '../../hooks';
 import { BodyPrimary } from '../typography';
 
 export const Form = (props) => {
-  const { details = {}, setDetails } = useJobVacancyDescription();
+  const { details, setDetails } = useJobVacancyDescription();
   const { register, handleSubmit, setValue } = useForm();
 
   const onSubmit = (data) => {

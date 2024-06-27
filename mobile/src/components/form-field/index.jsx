@@ -10,8 +10,8 @@ export const FormField = (props) => {
         {props.required && '*'}
       </Label>
       <TextInput
-        defaultValue={props.initialValue}
         style={{ ...styles.textInput, ...(props.multiline ? styles.multilineField : {}) }}
+        defaultValue={props.initialValue}
         placeholderTextColor='#8f8f8f'
         multiline={props.multiline}
         placeholder={props.placeholder}
