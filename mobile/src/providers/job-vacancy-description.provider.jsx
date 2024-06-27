@@ -1,6 +1,5 @@
-import { PropTypes } from 'prop-types';
 import React from 'react';
-import { useLocalStorage } from '../hooks/use-local-storage';
+import { useLocalStorage } from '../hooks';
 
 /**
  * interface JobVacancyDescription {
@@ -21,23 +20,29 @@ export const JobVacancyDescriptionContext = React.createContext({
 
 export const JobVacancyDescriptionProvider = (props) => {
   const { set, get } = useLocalStorage('job-vacancy-description');
-  const [details, setDetails] = React.useState(get());
+  const [details, setDetails] = React.useState({});
 
   const updateDetails = React.useCallback(
-    (newDetails) => {
-      set(newDetails);
+    async (newDetails) => {
+      await set(newDetails);
       setDetails(newDetails);
     },
-    [set, setDetails],
+    [setDetails],
   );
+
+  React.useEffect(() => {
+    async function getFromLocalStorage() {
+      const cache = await get();
+
+      setDetails(cache ?? {});
+    }
+
+    getFromLocalStorage();
+  }, []);
 
   return (
     <JobVacancyDescriptionContext.Provider value={{ details, setDetails: updateDetails }}>
       {props.children}
     </JobVacancyDescriptionContext.Provider>
   );
-};
-
-JobVacancyDescriptionProvider.propTypes = {
-  children: PropTypes.any.isRequired,
 };
