@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, FlatList } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { BodyPrimary } from '../typography';
 
 export const Historic = (props) => {
-  const scrollViewRef = React.useRef();
+  const flatlistRef = React.useRef();
 
   const historyGroupedByDate = props.historic.reduce((acc, { question, response, date }) => {
     const isTodayDate = new Date(date).toDateString() === new Date().toDateString();
@@ -19,30 +19,40 @@ export const Historic = (props) => {
     return acc;
   }, {});
 
+  React.useEffect(() => {
+    flatlistRef.current?.scrollToOffset({ animated: true, offset: 0 });
+  }, [JSON.stringify(historyGroupedByDate)]);
+
   return (
     <FlatList
+      ref={flatlistRef}
       data={Object.keys(historyGroupedByDate)}
+      onContentSizeChange={() => flatlistRef.current?.scrollToOffset?.({ animated: true, offset: 0 })}
+      onLayout={() => flatlistRef.current?.scrollToOffset?.({ animated: true, offset: 0 })}
       renderItem={({ item: date }) => (
         <View style={styles.historicContainer} key={date}>
           <BodyPrimary style={styles.dateText}>{date}</BodyPrimary>
 
-          {historyGroupedByDate[date].map(({ question, response }, index) => (
-            <View style={{ flex: 1, gap: 8 }} key={index}>
-              <View style={{ ...styles.messageContainer, alignSelf: 'flex-end' }}>
-                <BodyPrimary style={styles.message}>{question}</BodyPrimary>
-                <View style={styles.profile}>
-                  <BodyPrimary>U</BodyPrimary>
+          <FlatList
+            data={historyGroupedByDate[date]}
+            renderItem={({ item: { question, response } }) => (
+              <View style={{ flex: 1, gap: 8 }}>
+                <View style={{ ...styles.messageContainer, alignSelf: 'flex-end' }}>
+                  <BodyPrimary style={styles.message}>{question}</BodyPrimary>
+                  <View style={styles.profile}>
+                    <BodyPrimary>U</BodyPrimary>
+                  </View>
                 </View>
-              </View>
 
-              <View style={styles.messageContainer}>
-                <View style={styles.profile}>
-                  <BodyPrimary>AI</BodyPrimary>
+                <View style={styles.messageContainer}>
+                  <View style={styles.profile}>
+                    <BodyPrimary>AI</BodyPrimary>
+                  </View>
+                  <BodyPrimary style={styles.message}>{response}</BodyPrimary>
                 </View>
-                <BodyPrimary style={styles.message}>{response}</BodyPrimary>
               </View>
-            </View>
-          ))}
+            )}
+          />
         </View>
       )}
     />

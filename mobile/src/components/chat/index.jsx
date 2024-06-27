@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  FlatList,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, View } from 'react-native';
 import { Historic } from '../../components/historic';
 import { Input } from '../../components/input';
 import { useDeviceIdQuery } from '../../data/use-device-id-query';
@@ -56,24 +47,18 @@ export const Chat = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
-      {/* <View> */}
-      <Input onSubmit={handleMessage} />
-      <FlatList
-        data={aggregatedHistory}
-        renderItem={({ item }) => (
-          <View style={{ backgroundColor: '#fff' }}>
-            <Text>{item.date}</Text>
-            <Text>{item.question}</Text>
-            <Text>{item.response}</Text>
-          </View>
-        )}
-      />
-      {/* <Historic historic={aggregatedHistory} /> */}
-      {/* </View> */}
-      {/* </TouchableWithoutFeedback>
-      </KeyboardAvoidingView> */}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.select({ ios: 100, android: 0 })}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+          <>
+            <Historic historic={aggregatedHistory} />
+            <Input onSubmit={handleMessage} />
+          </>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </View>
   );
 };
